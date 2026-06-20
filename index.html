@@ -1,0 +1,1216 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pirate Plunder</title>
+    <style>
+:root {
+  color-scheme: dark;
+  --ink: #fff7e2;
+  --muted: #7b4421;
+  --dark: #1d4c32;
+  --green: #58bf32;
+  --green-deep: #2e8d23;
+  --gold: #ffd15d;
+  --gold-deep: #c77920;
+  --red: #e64b38;
+  --red-deep: #b92f26;
+  --blue: #59b9d1;
+  --wood: #8b471f;
+  --panel: #fff2cf;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: #101010;
+}
+
+button {
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.phone {
+  position: relative;
+  width: min(100%, 430px);
+  min-height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(79, 187, 219, 0.98) 0 18%, transparent 18%),
+    linear-gradient(180deg, #7dd9f0 0%, #f7fff4 52%, #dff2ff 100%);
+}
+
+.game-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr 0.72fr auto;
+  gap: 8px;
+  padding: 10px;
+  background: linear-gradient(180deg, #8bd5ed, #49a9ce);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.resource-pill,
+.shield-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 35px;
+  padding: 5px 10px;
+  border: 2px solid rgba(110, 70, 25, 0.34);
+  border-radius: 999px;
+  color: #6b3305;
+  background: linear-gradient(180deg, #fff7ce, #ffd66b);
+  font-weight: 950;
+  box-shadow: inset 0 -3px rgba(163, 86, 20, 0.16);
+}
+
+.coin,
+.bolt {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: #552c03;
+  background: linear-gradient(135deg, #fff2a6, var(--gold-deep));
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.bolt {
+  color: #0b5323;
+  background: linear-gradient(135deg, #e2ff9a, #57d141);
+}
+
+.menu-button,
+.small-green {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 2px solid rgba(25, 87, 24, 0.35);
+  border-radius: 8px;
+  color: white;
+  background: linear-gradient(180deg, #82df4d, var(--green-deep));
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  box-shadow: inset 0 -3px rgba(0, 0, 0, 0.18);
+}
+
+.view {
+  display: none;
+  min-height: calc(100vh - 55px);
+  padding: 12px 14px 18px;
+}
+
+.view.active {
+  display: block;
+}
+
+.brand-row,
+.build-top,
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brand-row {
+  padding: 8px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, rgba(20, 112, 147, 0.92), rgba(22, 82, 117, 0.82));
+}
+
+.captain-portrait {
+  flex: 0 0 50px;
+  width: 50px;
+  height: 50px;
+  border: 3px solid #ffe3a0;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 36%, #ffd2a1 0 18%, transparent 19%),
+    radial-gradient(circle at 50% 30%, #6e2d1b 0 28%, transparent 29%),
+    linear-gradient(180deg, #7ed1ef, #245f84);
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  color: #ffe36f;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 2px rgba(0, 0, 0, 0.18);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  color: white;
+  font-size: 1.25rem;
+  line-height: 1.05;
+  text-shadow: 0 3px rgba(0, 0, 0, 0.18);
+}
+
+h2 {
+  color: white;
+  font-size: 1rem;
+  text-shadow: 0 2px rgba(0, 0, 0, 0.18);
+}
+
+.slot-machine {
+  position: relative;
+  overflow: hidden;
+  border: 5px solid #8a3f1c;
+  border-top-width: 12px;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, #b92322 0 9%, transparent 9% 91%, #b92322 91%),
+    linear-gradient(180deg, #f9fbff 0%, #fff4db 100%);
+  box-shadow: 0 9px 0 #5e2c17, 0 18px 24px rgba(0, 0, 0, 0.22);
+}
+
+.slot-machine::before,
+.slot-machine::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: 38px;
+  background:
+    radial-gradient(circle at 18px 12px, #ffca47 0 8px, transparent 9px),
+    radial-gradient(circle at 76px 18px, #ffca47 0 10px, transparent 11px),
+    radial-gradient(circle at 138px 14px, #ffca47 0 8px, transparent 9px);
+  opacity: 0.8;
+}
+
+.slot-machine::before {
+  top: 106px;
+}
+
+.slot-machine::after {
+  bottom: 72px;
+}
+
+.slot-roof {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #a76232, #713719);
+}
+
+.shield-pill {
+  min-height: 32px;
+  color: #6b3305;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.reel-window {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: 18px 22px 10px;
+  padding: 8px;
+  border: 5px solid #e9c083;
+  border-radius: 8px;
+  background: #81411e;
+}
+
+.reel {
+  position: relative;
+  overflow: hidden;
+  height: 234px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fffdf4, #ffe7b8);
+  box-shadow: inset 0 0 0 3px rgba(125, 62, 20, 0.2);
+}
+
+.reel::before,
+.reel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 48px;
+  pointer-events: none;
+}
+
+.reel::before {
+  top: 0;
+  background: linear-gradient(180deg, rgba(104, 52, 20, 0.28), transparent);
+}
+
+.reel::after {
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(104, 52, 20, 0.3), transparent);
+}
+
+.reel-track {
+  will-change: transform;
+}
+
+.reel.is-spinning .reel-track {
+  filter: blur(0.4px);
+}
+
+.reel-cell {
+  display: grid;
+  height: 78px;
+  place-items: center;
+}
+
+.slot-symbol {
+  position: relative;
+  display: block;
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  background: #ffe39a;
+  box-shadow: inset 0 -5px rgba(199, 121, 32, 0.22), 0 4px rgba(130, 70, 20, 0.14);
+}
+
+.slot-symbol::before,
+.slot-symbol::after {
+  content: "";
+  position: absolute;
+}
+
+.symbol-gold {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 28%, #fff5b7 0 8px, transparent 9px),
+    radial-gradient(circle, #ffd84f 0 54%, #c97819 55% 100%);
+}
+
+.symbol-gold::before {
+  inset: 10px;
+  border: 4px solid #b56c16;
+  border-radius: 50%;
+}
+
+.symbol-gold::after {
+  left: 26px;
+  top: 14px;
+  width: 6px;
+  height: 28px;
+  border-radius: 4px;
+  background: #b56c16;
+  box-shadow: -8px 7px 0 -1px #b56c16, 8px 7px 0 -1px #b56c16;
+}
+
+.symbol-chest {
+  background: transparent;
+  box-shadow: none;
+}
+
+.symbol-chest::before {
+  left: 5px;
+  top: 17px;
+  width: 48px;
+  height: 34px;
+  border: 4px solid #6e3515;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #d88a2a 0 48%, #8e431d 49% 100%);
+  box-shadow: inset 0 -7px rgba(74, 32, 12, 0.18);
+}
+
+.symbol-chest::after {
+  left: 25px;
+  top: 15px;
+  width: 10px;
+  height: 39px;
+  border-radius: 3px;
+  background: #ffd85d;
+  box-shadow: -18px 15px 0 -2px #ffd85d, 18px 15px 0 -2px #ffd85d;
+}
+
+.symbol-map {
+  background: #f4d99c;
+  transform: rotate(-7deg);
+}
+
+.symbol-map::before {
+  inset: 8px;
+  border: 3px dashed #a7662a;
+  border-radius: 8px;
+}
+
+.symbol-map::after {
+  left: 31px;
+  top: 29px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #d33d35;
+  box-shadow: -13px -10px 0 -3px #53a86d;
+}
+
+.symbol-cannon {
+  background: transparent;
+  box-shadow: none;
+}
+
+.symbol-cannon::before {
+  left: 10px;
+  top: 25px;
+  width: 40px;
+  height: 18px;
+  border-radius: 12px 16px 16px 12px;
+  background: linear-gradient(180deg, #59616c, #1f2730);
+  transform: rotate(-16deg);
+  box-shadow: 21px -3px 0 -5px #151b22;
+}
+
+.symbol-cannon::after {
+  left: 12px;
+  top: 42px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #5b3216;
+  box-shadow: 24px -7px 0 #5b3216;
+}
+
+.symbol-raid {
+  background: transparent;
+  box-shadow: none;
+}
+
+.symbol-raid::before {
+  left: 14px;
+  top: 7px;
+  width: 6px;
+  height: 48px;
+  border-radius: 5px;
+  background: #5b3216;
+}
+
+.symbol-raid::after {
+  left: 18px;
+  top: 8px;
+  width: 33px;
+  height: 28px;
+  border-radius: 4px 12px 12px 4px;
+  background:
+    radial-gradient(circle at 16px 13px, white 0 4px, transparent 5px),
+    linear-gradient(180deg, #222 0 45%, #d94134 46% 100%);
+  clip-path: polygon(0 0, 100% 8%, 82% 50%, 100% 92%, 0 100%);
+}
+
+.symbol-shield {
+  border-radius: 18px 18px 24px 24px;
+  background: linear-gradient(135deg, #bff4ff, #4ea9d7);
+  clip-path: polygon(50% 0, 92% 16%, 82% 72%, 50% 100%, 18% 72%, 8% 16%);
+}
+
+.symbol-shield::before {
+  left: 27px;
+  top: 9px;
+  width: 5px;
+  height: 40px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.symbol-shield::after {
+  left: 15px;
+  top: 24px;
+  width: 28px;
+  height: 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.bet-strip {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 42px 9px;
+  padding: 7px 10px;
+  border: 3px solid #b87a31;
+  border-radius: 8px;
+  color: #70400e;
+  background: #ffe5ad;
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.result-text {
+  position: relative;
+  z-index: 2;
+  min-height: 48px;
+  margin: 0 18px 18px;
+  padding: 10px;
+  border: 3px solid #79bfd1;
+  border-radius: 8px;
+  color: #1e5c76;
+  background: white;
+  font-weight: 850;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.event-panel {
+  margin-top: 12px;
+  padding: 12px;
+  border: 4px solid #8a3f1c;
+  border-radius: 8px;
+  background: #fff1cc;
+  box-shadow: 0 6px 0 #5e2c17;
+}
+
+.event-panel h2 {
+  color: #733813;
+  text-shadow: none;
+}
+
+.event-panel p {
+  margin-top: 5px;
+  color: #7f4a21;
+  font-weight: 800;
+}
+
+.event-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.event-actions button {
+  min-height: 42px;
+  border: 2px solid #ac6d26;
+  border-radius: 8px;
+  color: #663100;
+  background: linear-gradient(180deg, #fff6c9, #ffc95f);
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.big-spin {
+  display: block;
+  width: 172px;
+  height: 78px;
+  margin: 18px auto 8px;
+  border: 5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 20px 20px 10px 10px;
+  color: white;
+  background: linear-gradient(180deg, #ff705f, var(--red-deep));
+  font-size: 1.75rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transform: perspective(220px) rotateX(13deg);
+  box-shadow: 0 9px 0 #8a251f, 0 16px 16px rgba(0, 0, 0, 0.22);
+  text-shadow: 0 3px rgba(0, 0, 0, 0.18);
+}
+
+.big-spin:disabled {
+  cursor: wait;
+  filter: grayscale(0.4);
+}
+
+.daily-button {
+  display: block;
+  width: 142px;
+  min-height: 36px;
+  margin: 0 auto;
+  border: 2px solid #c3842f;
+  border-radius: 8px;
+  color: #7c3d08;
+  background: #fff0bd;
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.daily-button:disabled {
+  opacity: 0.55;
+}
+
+.build-view {
+  padding: 12px 8px 18px;
+  background: linear-gradient(180deg, #8cd765 0%, #7fc857 58%, #5aa34e 100%);
+}
+
+.build-top {
+  padding: 8px 10px;
+}
+
+.island-map {
+  position: relative;
+  min-height: 530px;
+  overflow: hidden;
+  border: 4px solid rgba(33, 107, 44, 0.45);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 12% 95%, #5ca8dd 0 10%, transparent 11%),
+    radial-gradient(circle at 96% 7%, #4f9735 0 19%, transparent 20%),
+    linear-gradient(135deg, #9de765 0%, #8bd157 42%, #65b34a 43%, #82cc58 100%);
+  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.15), 0 10px 18px rgba(0, 0, 0, 0.22);
+}
+
+.path {
+  position: absolute;
+  inset: 28px 74px 28px 112px;
+  border: 26px solid transparent;
+  border-left-color: #d9b37a;
+  border-bottom-color: #d9b37a;
+  border-radius: 45% 26% 46% 30%;
+  transform: rotate(-16deg);
+  filter: drop-shadow(0 4px rgba(93, 77, 47, 0.16));
+}
+
+.smoke {
+  position: absolute;
+  width: 70px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61, 61, 61, 0.62), rgba(61, 61, 61, 0));
+  animation: smokePulse 1.8s ease-in-out infinite;
+}
+
+.smoke-one {
+  left: 48px;
+  top: 146px;
+}
+
+.smoke-two {
+  right: 45px;
+  top: 262px;
+  animation-delay: 0.35s;
+}
+
+.waterfall {
+  position: absolute;
+  left: 86px;
+  bottom: -26px;
+  width: 110px;
+  height: 112px;
+  border-radius: 12px;
+  background: linear-gradient(130deg, #c2f5ff, #57b8df);
+  transform: rotate(-20deg);
+  box-shadow: inset 20px 0 rgba(255, 255, 255, 0.35);
+}
+
+.map-target {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  min-width: 78px;
+  min-height: 76px;
+  padding-top: 48px;
+  color: white;
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-shadow: 0 2px rgba(0, 0, 0, 0.45);
+}
+
+.map-target span {
+  position: absolute;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(229, 65, 55, 0.82);
+  box-shadow: 0 0 0 4px rgba(229, 65, 55, 0.28), 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.map-target span::before,
+.map-target span::after {
+  content: "";
+  position: absolute;
+  background: white;
+}
+
+.map-target span::before {
+  left: 19px;
+  top: 7px;
+  width: 3px;
+  height: 27px;
+}
+
+.map-target span::after {
+  left: 7px;
+  top: 19px;
+  width: 27px;
+  height: 3px;
+}
+
+.target-dock {
+  left: 46px;
+  top: 78px;
+}
+
+.target-tavern {
+  right: 58px;
+  top: 112px;
+}
+
+.target-shipyard {
+  left: 88px;
+  top: 245px;
+}
+
+.target-fort {
+  right: 38px;
+  top: 314px;
+}
+
+.target-vault {
+  left: 178px;
+  top: 404px;
+}
+
+.build-sheet {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(20, 78, 54, 0.86);
+}
+
+.buildings {
+  display: grid;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.building {
+  display: grid;
+  grid-template-columns: 45px 1fr auto;
+  gap: 9px;
+  align-items: center;
+  padding: 9px;
+  border-radius: 8px;
+  background: #fff0c5;
+  color: #70380b;
+}
+
+.building-icon {
+  display: grid;
+  width: 45px;
+  height: 45px;
+  place-items: center;
+  border-radius: 8px;
+  color: #5b2d08;
+  background: linear-gradient(180deg, #fff2a4, #e5922e);
+  font-weight: 950;
+}
+
+.building h3 {
+  font-size: 0.92rem;
+}
+
+.building p {
+  margin-top: 2px;
+  color: #8a5423;
+  font-size: 0.76rem;
+  font-weight: 760;
+  line-height: 1.15;
+}
+
+.upgrade-button {
+  min-width: 68px;
+  min-height: 38px;
+  border-radius: 8px;
+  color: #5b2d08;
+  background: linear-gradient(180deg, #fff3a8, #ffc85b);
+  font-size: 0.78rem;
+  font-weight: 950;
+  box-shadow: inset 0 -3px rgba(143, 78, 14, 0.18);
+}
+
+.upgrade-button:disabled {
+  opacity: 0.5;
+}
+
+@keyframes smokePulse {
+  50% {
+    opacity: 0.55;
+    transform: translateY(-7px) scale(1.12);
+  }
+}
+
+@media (max-width: 380px) {
+  .reel {
+    height: 204px;
+  }
+
+  .reel-cell {
+    height: 68px;
+  }
+
+  .slot-symbol {
+    transform: scale(0.9);
+  }
+
+  .island-map {
+    min-height: 500px;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <main class="phone">
+      <header class="game-bar" aria-label="Player status">
+        <div class="resource-pill">
+          <span class="coin">G</span>
+          <strong id="goldBalance">2,500</strong>
+        </div>
+        <div class="resource-pill">
+          <span class="bolt">S</span>
+          <strong id="spinsLeft">10</strong>
+        </div>
+        <button class="menu-button" id="viewToggle">Build</button>
+      </header>
+
+      <section class="view spin-view active" id="spinView" aria-label="Spin area">
+        <div class="brand-row">
+          <div class="captain-portrait"></div>
+          <div>
+            <p class="eyebrow">Pirate Plunder</p>
+            <h1>Captain's Spin</h1>
+          </div>
+          <button class="small-green" id="toBuildButton">Cove</button>
+        </div>
+
+        <section class="slot-machine" aria-label="Pirate slot machine">
+          <div class="slot-roof">
+            <div>
+              <p class="eyebrow">Mode</p>
+              <h2 id="resultTitle">Ready to Plunder</h2>
+            </div>
+            <div class="shield-pill">Shield <strong id="shieldCount">1</strong></div>
+          </div>
+
+          <div class="reel-window">
+            <div class="reel" id="reelOne"></div>
+            <div class="reel" id="reelTwo"></div>
+            <div class="reel" id="reelThree"></div>
+          </div>
+
+          <div class="bet-strip">
+            <span>Map pieces <strong id="mapCount">0/3</strong></span>
+            <span>Bet x1</span>
+          </div>
+
+          <p class="result-text" id="resultText">Match pirate symbols to win gold, raids, shields, maps, and attacks.</p>
+        </section>
+
+        <section class="event-panel" id="eventPanel" hidden>
+          <h2 id="eventTitle">Raid Ready</h2>
+          <p id="eventText">Choose your move.</p>
+          <div class="event-actions" id="eventActions"></div>
+        </section>
+
+        <button class="big-spin" id="spinButton">Spin</button>
+        <button class="daily-button" id="dailyButton">Daily Chest</button>
+      </section>
+
+      <section class="view build-view" id="buildView" aria-label="Build area">
+        <div class="build-top">
+          <div>
+            <p class="eyebrow">Captain's Cove</p>
+            <h1>Build Area</h1>
+          </div>
+          <button class="small-green" id="toSpinButton">Spin</button>
+        </div>
+
+        <div class="island-map" id="islandMap" aria-label="Pirate cove upgrade map">
+          <div class="path"></div>
+          <div class="smoke smoke-one"></div>
+          <div class="smoke smoke-two"></div>
+          <div class="waterfall"></div>
+          <button class="map-target target-dock" data-map-upgrade="dock"><span></span>Dock</button>
+          <button class="map-target target-tavern" data-map-upgrade="tavern"><span></span>Tavern</button>
+          <button class="map-target target-shipyard" data-map-upgrade="shipyard"><span></span>Yard</button>
+          <button class="map-target target-fort" data-map-upgrade="fort"><span></span>Fort</button>
+          <button class="map-target target-vault" data-map-upgrade="vault"><span></span>Vault</button>
+        </div>
+
+        <section class="build-sheet">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Upgrade</p>
+              <h2>Tap a Cove Target</h2>
+            </div>
+          </div>
+          <div class="buildings" id="buildings"></div>
+        </section>
+      </section>
+    </main>
+
+    <script>
+const symbols = {
+  gold: { label: "Gold coins" },
+  raid: { label: "Pirate flag" },
+  shield: { label: "Storm shield" },
+  cannon: { label: "Cannon" },
+  map: { label: "Treasure map" },
+  chest: { label: "Treasure chest" },
+};
+
+const symbolKeys = Object.keys(symbols);
+
+const outcomes = [
+  { reels: ["gold", "gold", "gold"], type: "gold", amount: 1500, title: "Triple Treasure" },
+  { reels: ["cannon", "cannon", "cannon"], type: "attack", title: "Cannon Attack" },
+  { reels: ["raid", "raid", "raid"], type: "raid", title: "Raid a Rival Cove" },
+  { reels: ["shield", "shield", "shield"], type: "shield", amount: 1, title: "Storm Shield" },
+  { reels: ["map", "map", "map"], type: "map", amount: 1, title: "Map Piece Found" },
+  { reels: ["chest", "gold", "chest"], type: "gold", amount: 900, title: "Captain's Chest" },
+  { reels: ["gold", "cannon", "gold"], type: "gold", amount: 600, title: "Loose Doubloons" },
+  { reels: ["map", "raid", "gold"], type: "map", amount: 1, title: "Treasure Clue" },
+];
+
+const buildings = [
+  { id: "dock", name: "Dock", icon: "D", level: 1, baseCost: 650, note: "Bigger ships bring better loot." },
+  { id: "tavern", name: "Tavern", icon: "T", level: 1, baseCost: 500, note: "Keeps the crew ready." },
+  { id: "shipyard", name: "Shipyard", icon: "Y", level: 1, baseCost: 800, note: "Builds stronger cannons." },
+  { id: "fort", name: "Fort", icon: "F", level: 1, baseCost: 900, note: "Protects the cove." },
+  { id: "vault", name: "Vault", icon: "V", level: 1, baseCost: 700, note: "Stores more treasure." },
+];
+
+const state = {
+  gold: 2500,
+  spins: 10,
+  shields: 1,
+  maps: 0,
+  spinning: false,
+  dailyClaimed: false,
+  activeView: "spin",
+};
+
+const goldBalance = document.querySelector("#goldBalance");
+const spinsLeft = document.querySelector("#spinsLeft");
+const shieldCount = document.querySelector("#shieldCount");
+const mapCount = document.querySelector("#mapCount");
+const spinButton = document.querySelector("#spinButton");
+const resultTitle = document.querySelector("#resultTitle");
+const resultText = document.querySelector("#resultText");
+const eventPanel = document.querySelector("#eventPanel");
+const eventTitle = document.querySelector("#eventTitle");
+const eventText = document.querySelector("#eventText");
+const eventActions = document.querySelector("#eventActions");
+const buildingsEl = document.querySelector("#buildings");
+const dailyButton = document.querySelector("#dailyButton");
+const spinView = document.querySelector("#spinView");
+const buildView = document.querySelector("#buildView");
+const viewToggle = document.querySelector("#viewToggle");
+const toBuildButton = document.querySelector("#toBuildButton");
+const toSpinButton = document.querySelector("#toSpinButton");
+const reels = [document.querySelector("#reelOne"), document.querySelector("#reelTwo"), document.querySelector("#reelThree")];
+
+function formatGold(value) {
+  return value.toLocaleString("en-US");
+}
+
+function upgradeCost(building) {
+  return Math.round(building.baseCost * building.level * 1.35);
+}
+
+function setView(view) {
+  state.activeView = view;
+  spinView.classList.toggle("active", view === "spin");
+  buildView.classList.toggle("active", view === "build");
+  viewToggle.textContent = view === "spin" ? "Build" : "Spin";
+}
+
+function setReels(keys) {
+  reels.forEach((reel, index) => {
+    const before = symbolKeys[(symbolKeys.indexOf(keys[index]) + 5) % symbolKeys.length];
+    const after = symbolKeys[(symbolKeys.indexOf(keys[index]) + 1) % symbolKeys.length];
+    reel.innerHTML = `
+      <div class="reel-track">
+        ${symbolMarkup(before)}
+        ${symbolMarkup(keys[index], " is-result")}
+        ${symbolMarkup(after)}
+      </div>
+    `;
+    reel.dataset.result = keys[index];
+    reel.querySelector(".reel-track").style.transform = `translateY(0)`;
+  });
+}
+
+function symbolMarkup(key, className = "") {
+  return `
+    <span class="reel-cell${className}" data-symbol="${key}" aria-label="${symbols[key].label}">
+      <span class="slot-symbol symbol-${key}"></span>
+    </span>
+  `;
+}
+
+function randomSymbol(exclude) {
+  const choices = symbolKeys.filter((key) => key !== exclude);
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function getReelCellHeight(reel) {
+  const cell = reel.querySelector(".reel-cell");
+  return cell ? cell.getBoundingClientRect().height : 78;
+}
+
+function buildSpinStrip(finalKey, reelIndex, cellHeight) {
+  const strip = [];
+  const visibleBeforeResult = 1;
+  const spinLength = 18 + reelIndex * 4;
+
+  for (let index = 0; index < spinLength; index += 1) {
+    strip.push(randomSymbol(strip[index - 1]));
+  }
+
+  strip.push(finalKey, randomSymbol(finalKey));
+  return {
+    keys: strip,
+    resultIndex: strip.length - 2,
+    resultOffset: (strip.length - 1 - visibleBeforeResult) * cellHeight,
+  };
+}
+
+function waitForReelStop(reel, fallbackMs) {
+  const track = reel.querySelector(".reel-track");
+
+  return new Promise((resolve) => {
+    let finished = false;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      track.removeEventListener("transitionend", onTransitionEnd);
+      resolve();
+    };
+
+    const onTransitionEnd = (event) => {
+      if (event.propertyName === "transform") finish();
+    };
+
+    track.addEventListener("transitionend", onTransitionEnd);
+    window.setTimeout(finish, fallbackMs);
+  });
+}
+
+function render() {
+  goldBalance.textContent = formatGold(state.gold);
+  spinsLeft.textContent = state.spins;
+  shieldCount.textContent = state.shields;
+  mapCount.textContent = `${state.maps}/3`;
+  spinButton.disabled = state.spinning || state.spins <= 0;
+  dailyButton.disabled = state.dailyClaimed;
+  dailyButton.textContent = state.dailyClaimed ? "Chest Claimed" : "Daily Chest";
+
+  buildingsEl.innerHTML = buildings
+    .map((building) => {
+      const cost = upgradeCost(building);
+      const disabled = state.gold < cost ? "disabled" : "";
+      return `
+        <article class="building">
+          <div class="building-icon">${building.icon}</div>
+          <div>
+            <h3>${building.name} Lv. ${building.level}</h3>
+            <p>${building.note}</p>
+          </div>
+          <button class="upgrade-button" data-upgrade="${building.id}" ${disabled}>${formatGold(cost)}</button>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function showResult(title, text) {
+  resultTitle.textContent = title;
+  resultText.textContent = text;
+}
+
+function hideEvent() {
+  eventPanel.hidden = true;
+  eventActions.innerHTML = "";
+}
+
+function showChoiceEvent(kind) {
+  const isRaid = kind === "raid";
+  eventPanel.hidden = false;
+  eventTitle.textContent = isRaid ? "Raid a Rival Cove" : "Fire the Cannons";
+  eventText.textContent = isRaid
+    ? "Pick a hiding spot. One has the big stash, two have smaller spoils."
+    : "Choose a target. Forts may block some of the damage.";
+
+  const actions = isRaid
+    ? [
+        { label: "Palm Hut", gold: 500 },
+        { label: "Old Well", gold: 950 },
+        { label: "Shipwreck", gold: 1600 },
+      ]
+    : [
+        { label: "Dock", gold: 650 },
+        { label: "Fort", gold: 400 },
+        { label: "Vault", gold: 900 },
+      ];
+
+  eventActions.innerHTML = actions
+    .sort(() => Math.random() - 0.5)
+    .map((action) => `<button data-event-gold="${action.gold}" data-kind="${kind}">${action.label}</button>`)
+    .join("");
+}
+
+function handleOutcome(outcome) {
+  hideEvent();
+
+  if (outcome.type === "gold") {
+    state.gold += outcome.amount;
+    showResult(outcome.title, `You hauled in ${formatGold(outcome.amount)} gold.`);
+  }
+
+  if (outcome.type === "shield") {
+    state.shields += outcome.amount;
+    showResult(outcome.title, "A charm of storm fog now protects your cove.");
+  }
+
+  if (outcome.type === "map") {
+    state.maps += outcome.amount;
+    if (state.maps >= 3) {
+      state.maps = 0;
+      state.gold += 1800;
+      showResult("Treasure Map Complete", "You found a buried cache worth 1,800 gold.");
+    } else {
+      showResult(outcome.title, "Collect 3 map pieces to uncover buried treasure.");
+    }
+  }
+
+  if (outcome.type === "raid" || outcome.type === "attack") {
+    showResult(outcome.title, "Choose where to strike for bonus treasure.");
+    showChoiceEvent(outcome.type);
+  }
+
+  render();
+}
+
+function spinSlots() {
+  if (state.spinning || state.spins <= 0) return;
+
+  state.spinning = true;
+  state.spins -= 1;
+  hideEvent();
+  showResult("Spinning", "The reels are rolling...");
+  render();
+
+  const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+  const stopPromises = reels.map((reel, index) => {
+    const strip = buildSpinStrip(outcome.reels[index], index, getReelCellHeight(reel));
+    reel.classList.add("is-spinning");
+    reel.dataset.result = outcome.reels[index];
+    reel.innerHTML = `
+      <div class="reel-track">
+        ${strip.keys.map((key, cellIndex) => symbolMarkup(key, cellIndex === strip.resultIndex ? " is-result" : "")).join("")}
+      </div>
+    `;
+
+    const track = reel.querySelector(".reel-track");
+    const duration = 1.25 + index * 0.25;
+    track.style.transition = "none";
+    track.style.transform = "translateY(0)";
+    track.offsetHeight;
+    track.style.transition = `transform ${duration}s cubic-bezier(0.12, 0.76, 0.18, 1)`;
+    track.style.transform = `translateY(-${strip.resultOffset}px)`;
+    return waitForReelStop(reel, duration * 1000 + 400);
+  });
+
+  Promise.all(stopPromises).then(() => {
+    reels.forEach((reel) => reel.classList.remove("is-spinning"));
+    state.spinning = false;
+    handleOutcome(outcome);
+  });
+}
+
+function upgradeBuilding(id) {
+  const building = buildings.find((item) => item.id === id);
+  if (!building) return;
+
+  const cost = upgradeCost(building);
+  if (state.gold < cost) {
+    setView("spin");
+    showResult("Need More Gold", `Spin for treasure to upgrade the ${building.name.toLowerCase()}.`);
+    return;
+  }
+
+  state.gold -= cost;
+  building.level += 1;
+  render();
+}
+
+spinButton.addEventListener("click", spinSlots);
+viewToggle.addEventListener("click", () => setView(state.activeView === "spin" ? "build" : "spin"));
+toBuildButton.addEventListener("click", () => setView("build"));
+toSpinButton.addEventListener("click", () => setView("spin"));
+
+buildingsEl.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-upgrade]");
+  if (!button) return;
+  upgradeBuilding(button.dataset.upgrade);
+});
+
+document.querySelector("#islandMap").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-map-upgrade]");
+  if (!button) return;
+  upgradeBuilding(button.dataset.mapUpgrade);
+});
+
+eventActions.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-event-gold]");
+  if (!button) return;
+
+  const gold = Number(button.dataset.eventGold);
+  state.gold += gold;
+  showResult(button.dataset.kind === "raid" ? "Raid Complete" : "Attack Complete", `You plundered ${formatGold(gold)} gold.`);
+  hideEvent();
+  render();
+});
+
+dailyButton.addEventListener("click", () => {
+  if (state.dailyClaimed) return;
+  state.dailyClaimed = true;
+  state.gold += 1000;
+  state.spins += 5;
+  showResult("Daily Chest Opened", "You gained 1,000 gold and 5 extra spins.");
+  hideEvent();
+  render();
+});
+
+setReels(["gold", "cannon", "map"]);
+render();
+
+    </script>
+  </body>
+</html>
