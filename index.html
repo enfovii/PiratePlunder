@@ -1,1216 +1,4172 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pirate Plunder</title>
-    <style>
-:root {
-  color-scheme: dark;
-  --ink: #fff7e2;
-  --muted: #7b4421;
-  --dark: #1d4c32;
-  --green: #58bf32;
-  --green-deep: #2e8d23;
-  --gold: #ffd15d;
-  --gold-deep: #c77920;
-  --red: #e64b38;
-  --red-deep: #b92f26;
-  --blue: #59b9d1;
-  --wood: #8b471f;
-  --panel: #fff2cf;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  min-height: 100vh;
-  margin: 0;
-  color: var(--ink);
-  background: #101010;
-}
-
-button {
-  border: 0;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.phone {
-  position: relative;
-  width: min(100%, 430px);
-  min-height: 100vh;
-  margin: 0 auto;
-  overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(79, 187, 219, 0.98) 0 18%, transparent 18%),
-    linear-gradient(180deg, #7dd9f0 0%, #f7fff4 52%, #dff2ff 100%);
-}
-
-.game-bar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: grid;
-  grid-template-columns: 1fr 0.72fr auto;
-  gap: 8px;
-  padding: 10px;
-  background: linear-gradient(180deg, #8bd5ed, #49a9ce);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
-}
-
-.resource-pill,
-.shield-pill {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 35px;
-  padding: 5px 10px;
-  border: 2px solid rgba(110, 70, 25, 0.34);
-  border-radius: 999px;
-  color: #6b3305;
-  background: linear-gradient(180deg, #fff7ce, #ffd66b);
-  font-weight: 950;
-  box-shadow: inset 0 -3px rgba(163, 86, 20, 0.16);
-}
-
-.coin,
-.bolt {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  border-radius: 50%;
-  color: #552c03;
-  background: linear-gradient(135deg, #fff2a6, var(--gold-deep));
-  font-size: 0.78rem;
-  font-weight: 950;
-}
-
-.bolt {
-  color: #0b5323;
-  background: linear-gradient(135deg, #e2ff9a, #57d141);
-}
-
-.menu-button,
-.small-green {
-  min-height: 36px;
-  padding: 0 12px;
-  border: 2px solid rgba(25, 87, 24, 0.35);
-  border-radius: 8px;
-  color: white;
-  background: linear-gradient(180deg, #82df4d, var(--green-deep));
-  font-size: 0.78rem;
-  font-weight: 950;
-  text-transform: uppercase;
-  box-shadow: inset 0 -3px rgba(0, 0, 0, 0.18);
-}
-
-.view {
-  display: none;
-  min-height: calc(100vh - 55px);
-  padding: 12px 14px 18px;
-}
-
-.view.active {
-  display: block;
-}
-
-.brand-row,
-.build-top,
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.brand-row {
-  padding: 8px;
-  border-radius: 8px 8px 0 0;
-  background: linear-gradient(180deg, rgba(20, 112, 147, 0.92), rgba(22, 82, 117, 0.82));
-}
-
-.captain-portrait {
-  flex: 0 0 50px;
-  width: 50px;
-  height: 50px;
-  border: 3px solid #ffe3a0;
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 50% 36%, #ffd2a1 0 18%, transparent 19%),
-    radial-gradient(circle at 50% 30%, #6e2d1b 0 28%, transparent 29%),
-    linear-gradient(180deg, #7ed1ef, #245f84);
-}
-
-.eyebrow {
-  margin: 0 0 2px;
-  color: #ffe36f;
-  font-size: 0.68rem;
-  font-weight: 950;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-shadow: 0 2px rgba(0, 0, 0, 0.18);
-}
-
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-
-h1 {
-  color: white;
-  font-size: 1.25rem;
-  line-height: 1.05;
-  text-shadow: 0 3px rgba(0, 0, 0, 0.18);
-}
-
-h2 {
-  color: white;
-  font-size: 1rem;
-  text-shadow: 0 2px rgba(0, 0, 0, 0.18);
-}
-
-.slot-machine {
-  position: relative;
-  overflow: hidden;
-  border: 5px solid #8a3f1c;
-  border-top-width: 12px;
-  border-radius: 8px;
-  background:
-    linear-gradient(90deg, #b92322 0 9%, transparent 9% 91%, #b92322 91%),
-    linear-gradient(180deg, #f9fbff 0%, #fff4db 100%);
-  box-shadow: 0 9px 0 #5e2c17, 0 18px 24px rgba(0, 0, 0, 0.22);
-}
-
-.slot-machine::before,
-.slot-machine::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 0;
-  height: 38px;
-  background:
-    radial-gradient(circle at 18px 12px, #ffca47 0 8px, transparent 9px),
-    radial-gradient(circle at 76px 18px, #ffca47 0 10px, transparent 11px),
-    radial-gradient(circle at 138px 14px, #ffca47 0 8px, transparent 9px);
-  opacity: 0.8;
-}
-
-.slot-machine::before {
-  top: 106px;
-}
-
-.slot-machine::after {
-  bottom: 72px;
-}
-
-.slot-roof {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  background: linear-gradient(180deg, #a76232, #713719);
-}
-
-.shield-pill {
-  min-height: 32px;
-  color: #6b3305;
-  font-size: 0.78rem;
-  white-space: nowrap;
-}
-
-.reel-window {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
-  margin: 18px 22px 10px;
-  padding: 8px;
-  border: 5px solid #e9c083;
-  border-radius: 8px;
-  background: #81411e;
-}
-
-.reel {
-  position: relative;
-  overflow: hidden;
-  height: 234px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fffdf4, #ffe7b8);
-  box-shadow: inset 0 0 0 3px rgba(125, 62, 20, 0.2);
-}
-
-.reel::before,
-.reel::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  height: 48px;
-  pointer-events: none;
-}
-
-.reel::before {
-  top: 0;
-  background: linear-gradient(180deg, rgba(104, 52, 20, 0.28), transparent);
-}
-
-.reel::after {
-  bottom: 0;
-  background: linear-gradient(0deg, rgba(104, 52, 20, 0.3), transparent);
-}
-
-.reel-track {
-  will-change: transform;
-}
-
-.reel.is-spinning .reel-track {
-  filter: blur(0.4px);
-}
-
-.reel-cell {
-  display: grid;
-  height: 78px;
-  place-items: center;
-}
-
-.slot-symbol {
-  position: relative;
-  display: block;
-  width: 58px;
-  height: 58px;
-  border-radius: 12px;
-  background: #ffe39a;
-  box-shadow: inset 0 -5px rgba(199, 121, 32, 0.22), 0 4px rgba(130, 70, 20, 0.14);
-}
-
-.slot-symbol::before,
-.slot-symbol::after {
-  content: "";
-  position: absolute;
-}
-
-.symbol-gold {
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 36% 28%, #fff5b7 0 8px, transparent 9px),
-    radial-gradient(circle, #ffd84f 0 54%, #c97819 55% 100%);
-}
-
-.symbol-gold::before {
-  inset: 10px;
-  border: 4px solid #b56c16;
-  border-radius: 50%;
-}
-
-.symbol-gold::after {
-  left: 26px;
-  top: 14px;
-  width: 6px;
-  height: 28px;
-  border-radius: 4px;
-  background: #b56c16;
-  box-shadow: -8px 7px 0 -1px #b56c16, 8px 7px 0 -1px #b56c16;
-}
-
-.symbol-chest {
-  background: transparent;
-  box-shadow: none;
-}
-
-.symbol-chest::before {
-  left: 5px;
-  top: 17px;
-  width: 48px;
-  height: 34px;
-  border: 4px solid #6e3515;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #d88a2a 0 48%, #8e431d 49% 100%);
-  box-shadow: inset 0 -7px rgba(74, 32, 12, 0.18);
-}
-
-.symbol-chest::after {
-  left: 25px;
-  top: 15px;
-  width: 10px;
-  height: 39px;
-  border-radius: 3px;
-  background: #ffd85d;
-  box-shadow: -18px 15px 0 -2px #ffd85d, 18px 15px 0 -2px #ffd85d;
-}
-
-.symbol-map {
-  background: #f4d99c;
-  transform: rotate(-7deg);
-}
-
-.symbol-map::before {
-  inset: 8px;
-  border: 3px dashed #a7662a;
-  border-radius: 8px;
-}
-
-.symbol-map::after {
-  left: 31px;
-  top: 29px;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #d33d35;
-  box-shadow: -13px -10px 0 -3px #53a86d;
-}
-
-.symbol-cannon {
-  background: transparent;
-  box-shadow: none;
-}
-
-.symbol-cannon::before {
-  left: 10px;
-  top: 25px;
-  width: 40px;
-  height: 18px;
-  border-radius: 12px 16px 16px 12px;
-  background: linear-gradient(180deg, #59616c, #1f2730);
-  transform: rotate(-16deg);
-  box-shadow: 21px -3px 0 -5px #151b22;
-}
-
-.symbol-cannon::after {
-  left: 12px;
-  top: 42px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #5b3216;
-  box-shadow: 24px -7px 0 #5b3216;
-}
-
-.symbol-raid {
-  background: transparent;
-  box-shadow: none;
-}
-
-.symbol-raid::before {
-  left: 14px;
-  top: 7px;
-  width: 6px;
-  height: 48px;
-  border-radius: 5px;
-  background: #5b3216;
-}
-
-.symbol-raid::after {
-  left: 18px;
-  top: 8px;
-  width: 33px;
-  height: 28px;
-  border-radius: 4px 12px 12px 4px;
-  background:
-    radial-gradient(circle at 16px 13px, white 0 4px, transparent 5px),
-    linear-gradient(180deg, #222 0 45%, #d94134 46% 100%);
-  clip-path: polygon(0 0, 100% 8%, 82% 50%, 100% 92%, 0 100%);
-}
-
-.symbol-shield {
-  border-radius: 18px 18px 24px 24px;
-  background: linear-gradient(135deg, #bff4ff, #4ea9d7);
-  clip-path: polygon(50% 0, 92% 16%, 82% 72%, 50% 100%, 18% 72%, 8% 16%);
-}
-
-.symbol-shield::before {
-  left: 27px;
-  top: 9px;
-  width: 5px;
-  height: 40px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.symbol-shield::after {
-  left: 15px;
-  top: 24px;
-  width: 28px;
-  height: 5px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.bet-strip {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 42px 9px;
-  padding: 7px 10px;
-  border: 3px solid #b87a31;
-  border-radius: 8px;
-  color: #70400e;
-  background: #ffe5ad;
-  font-size: 0.82rem;
-  font-weight: 950;
-}
-
-.result-text {
-  position: relative;
-  z-index: 2;
-  min-height: 48px;
-  margin: 0 18px 18px;
-  padding: 10px;
-  border: 3px solid #79bfd1;
-  border-radius: 8px;
-  color: #1e5c76;
-  background: white;
-  font-weight: 850;
-  line-height: 1.25;
-  text-align: center;
-}
-
-.event-panel {
-  margin-top: 12px;
-  padding: 12px;
-  border: 4px solid #8a3f1c;
-  border-radius: 8px;
-  background: #fff1cc;
-  box-shadow: 0 6px 0 #5e2c17;
-}
-
-.event-panel h2 {
-  color: #733813;
-  text-shadow: none;
-}
-
-.event-panel p {
-  margin-top: 5px;
-  color: #7f4a21;
-  font-weight: 800;
-}
-
-.event-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.event-actions button {
-  min-height: 42px;
-  border: 2px solid #ac6d26;
-  border-radius: 8px;
-  color: #663100;
-  background: linear-gradient(180deg, #fff6c9, #ffc95f);
-  font-size: 0.78rem;
-  font-weight: 950;
-}
-
-.big-spin {
-  display: block;
-  width: 172px;
-  height: 78px;
-  margin: 18px auto 8px;
-  border: 5px solid rgba(255, 255, 255, 0.9);
-  border-radius: 20px 20px 10px 10px;
-  color: white;
-  background: linear-gradient(180deg, #ff705f, var(--red-deep));
-  font-size: 1.75rem;
-  font-weight: 950;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  transform: perspective(220px) rotateX(13deg);
-  box-shadow: 0 9px 0 #8a251f, 0 16px 16px rgba(0, 0, 0, 0.22);
-  text-shadow: 0 3px rgba(0, 0, 0, 0.18);
-}
-
-.big-spin:disabled {
-  cursor: wait;
-  filter: grayscale(0.4);
-}
-
-.daily-button {
-  display: block;
-  width: 142px;
-  min-height: 36px;
-  margin: 0 auto;
-  border: 2px solid #c3842f;
-  border-radius: 8px;
-  color: #7c3d08;
-  background: #fff0bd;
-  font-size: 0.82rem;
-  font-weight: 950;
-}
-
-.daily-button:disabled {
-  opacity: 0.55;
-}
-
-.build-view {
-  padding: 12px 8px 18px;
-  background: linear-gradient(180deg, #8cd765 0%, #7fc857 58%, #5aa34e 100%);
-}
-
-.build-top {
-  padding: 8px 10px;
-}
-
-.island-map {
-  position: relative;
-  min-height: 530px;
-  overflow: hidden;
-  border: 4px solid rgba(33, 107, 44, 0.45);
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 12% 95%, #5ca8dd 0 10%, transparent 11%),
-    radial-gradient(circle at 96% 7%, #4f9735 0 19%, transparent 20%),
-    linear-gradient(135deg, #9de765 0%, #8bd157 42%, #65b34a 43%, #82cc58 100%);
-  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.15), 0 10px 18px rgba(0, 0, 0, 0.22);
-}
-
-.path {
-  position: absolute;
-  inset: 28px 74px 28px 112px;
-  border: 26px solid transparent;
-  border-left-color: #d9b37a;
-  border-bottom-color: #d9b37a;
-  border-radius: 45% 26% 46% 30%;
-  transform: rotate(-16deg);
-  filter: drop-shadow(0 4px rgba(93, 77, 47, 0.16));
-}
-
-.smoke {
-  position: absolute;
-  width: 70px;
-  height: 52px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(61, 61, 61, 0.62), rgba(61, 61, 61, 0));
-  animation: smokePulse 1.8s ease-in-out infinite;
-}
-
-.smoke-one {
-  left: 48px;
-  top: 146px;
-}
-
-.smoke-two {
-  right: 45px;
-  top: 262px;
-  animation-delay: 0.35s;
-}
-
-.waterfall {
-  position: absolute;
-  left: 86px;
-  bottom: -26px;
-  width: 110px;
-  height: 112px;
-  border-radius: 12px;
-  background: linear-gradient(130deg, #c2f5ff, #57b8df);
-  transform: rotate(-20deg);
-  box-shadow: inset 20px 0 rgba(255, 255, 255, 0.35);
-}
-
-.map-target {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  min-width: 78px;
-  min-height: 76px;
-  padding-top: 48px;
-  color: white;
-  background: transparent;
-  font-size: 0.72rem;
-  font-weight: 950;
-  text-shadow: 0 2px rgba(0, 0, 0, 0.45);
-}
-
-.map-target span {
-  position: absolute;
-  top: 0;
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  background: rgba(229, 65, 55, 0.82);
-  box-shadow: 0 0 0 4px rgba(229, 65, 55, 0.28), 0 8px 12px rgba(0, 0, 0, 0.2);
-}
-
-.map-target span::before,
-.map-target span::after {
-  content: "";
-  position: absolute;
-  background: white;
-}
-
-.map-target span::before {
-  left: 19px;
-  top: 7px;
-  width: 3px;
-  height: 27px;
-}
-
-.map-target span::after {
-  left: 7px;
-  top: 19px;
-  width: 27px;
-  height: 3px;
-}
-
-.target-dock {
-  left: 46px;
-  top: 78px;
-}
-
-.target-tavern {
-  right: 58px;
-  top: 112px;
-}
-
-.target-shipyard {
-  left: 88px;
-  top: 245px;
-}
-
-.target-fort {
-  right: 38px;
-  top: 314px;
-}
-
-.target-vault {
-  left: 178px;
-  top: 404px;
-}
-
-.build-sheet {
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 8px;
-  background: rgba(20, 78, 54, 0.86);
-}
-
-.buildings {
-  display: grid;
-  gap: 9px;
-  margin-top: 10px;
-}
-
-.building {
-  display: grid;
-  grid-template-columns: 45px 1fr auto;
-  gap: 9px;
-  align-items: center;
-  padding: 9px;
-  border-radius: 8px;
-  background: #fff0c5;
-  color: #70380b;
-}
-
-.building-icon {
-  display: grid;
-  width: 45px;
-  height: 45px;
-  place-items: center;
-  border-radius: 8px;
-  color: #5b2d08;
-  background: linear-gradient(180deg, #fff2a4, #e5922e);
-  font-weight: 950;
-}
-
-.building h3 {
-  font-size: 0.92rem;
-}
-
-.building p {
-  margin-top: 2px;
-  color: #8a5423;
-  font-size: 0.76rem;
-  font-weight: 760;
-  line-height: 1.15;
-}
-
-.upgrade-button {
-  min-width: 68px;
-  min-height: 38px;
-  border-radius: 8px;
-  color: #5b2d08;
-  background: linear-gradient(180deg, #fff3a8, #ffc85b);
-  font-size: 0.78rem;
-  font-weight: 950;
-  box-shadow: inset 0 -3px rgba(143, 78, 14, 0.18);
-}
-
-.upgrade-button:disabled {
-  opacity: 0.5;
-}
-
-@keyframes smokePulse {
-  50% {
-    opacity: 0.55;
-    transform: translateY(-7px) scale(1.12);
-  }
-}
-
-@media (max-width: 380px) {
-  .reel {
-    height: 204px;
-  }
-
-  .reel-cell {
-    height: 68px;
-  }
-
-  .slot-symbol {
-    transform: scale(0.9);
-  }
-
-  .island-map {
-    min-height: 500px;
-  }
-}
-
-    </style>
-  </head>
-  <body>
-    <main class="phone">
-      <header class="game-bar" aria-label="Player status">
-        <div class="resource-pill">
-          <span class="coin">G</span>
-          <strong id="goldBalance">2,500</strong>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pirate Cove</title>
+  <style>
+    :root {
+      --bg: #080604;
+      --bg-2: #15100b;
+      --wood: #20150d;
+      --wood-2: #342012;
+      --panel: rgba(18, 14, 10, 0.9);
+      --card: rgba(23, 17, 12, 0.9);
+      --card-strong: rgba(34, 24, 15, 0.96);
+      --gold: #f6c75b;
+      --gold-2: #b77822;
+      --cream: #f8e6ba;
+      --text: #faefd4;
+      --muted: #c6aa73;
+      --red: #8f2b20;
+      --green: #24583a;
+      --blue: #17475b;
+      --line: rgba(244, 188, 87, 0.32);
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.58);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", ui-serif, serif;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(31, 84, 102, 0.58), transparent 32%),
+        radial-gradient(circle at 22% 64%, rgba(139, 55, 22, 0.32), transparent 30%),
+        linear-gradient(180deg, #030405 0%, #101010 45%, #050403 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto -18% -8% -18%;
+      height: 34vh;
+      background:
+        radial-gradient(ellipse at 20% 70%, rgba(101, 55, 25, 0.52), transparent 44%),
+        radial-gradient(ellipse at 78% 55%, rgba(23, 61, 75, 0.72), transparent 48%);
+      filter: blur(2px);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::after {
+      inset: 0;
+      height: auto;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 76%, transparent);
+      z-index: -3;
+    }
+
+    .app {
+      width: min(100%, 1180px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 10px 10px 94px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      border: 2px solid #5f3c1d;
+      border-radius: 8px;
+      padding: 8px;
+      background:
+        linear-gradient(180deg, rgba(59, 38, 21, 0.94), rgba(17, 12, 8, 0.96)),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 18px);
+      box-shadow: inset 0 0 0 1px rgba(255, 216, 139, 0.14), var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border: 2px solid #7b4b20;
+      border-radius: 50%;
+      background: radial-gradient(circle, #3a2413, #080604 70%);
+      box-shadow: inset 0 0 18px rgba(255, 188, 68, 0.16), 0 0 0 2px rgba(0, 0, 0, 0.4);
+      font-size: 25px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      color: var(--cream);
+      font-size: clamp(1.45rem, 8vw, 2.4rem);
+      letter-spacing: 0;
+      line-height: 1.05;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #000, 0 0 12px rgba(246, 199, 91, 0.18);
+    }
+
+    .subtitle {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .reset {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 9px 12px;
+      color: var(--cream);
+      background: linear-gradient(180deg, #2d1f14, #130d09);
+      font-weight: 750;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 112px;
+      margin-bottom: 10px;
+      border: 2px solid #5a381a;
+      border-radius: 8px;
+      background:
+        linear-gradient(160deg, rgba(3, 13, 22, 0.18), rgba(6, 20, 28, 0.9)),
+        radial-gradient(circle at 76% 28%, rgba(247, 200, 75, 0.18), transparent 28%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      opacity: 0.96;
+    }
+
+    .moon {
+      position: absolute;
+      top: 14px;
+      right: 20px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff9d9, #e8b94b 65%, #a86524);
+      box-shadow: 0 0 36px rgba(247, 200, 75, 0.35);
+    }
+
+    .island {
+      position: absolute;
+      right: 0;
+      bottom: 16px;
+      width: 146px;
+      height: 46px;
+      border-radius: 70% 0 0 0;
+      background: #102919;
+      transform: skewX(-8deg);
+    }
+
+    .palm {
+      position: absolute;
+      right: 67px;
+      bottom: 42px;
+      width: 9px;
+      height: 46px;
+      border-radius: 999px;
+      background: #70461e;
+      transform: rotate(10deg);
+    }
+
+    .palm::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: -33px;
+      width: 76px;
+      height: 34px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 20% 55%, #238050 0 34%, transparent 36%),
+        radial-gradient(ellipse at 52% 20%, #2da864 0 34%, transparent 36%),
+        radial-gradient(ellipse at 78% 58%, #238050 0 34%, transparent 36%);
+    }
+
+    .ship {
+      position: absolute;
+      left: 18px;
+      bottom: 28px;
+      width: 102px;
+      height: 60px;
+      transform: scale(0.88);
+      transform-origin: left bottom;
+    }
+
+    .mast {
+      position: absolute;
+      left: 55px;
+      bottom: 20px;
+      width: 5px;
+      height: 58px;
+      border-radius: 999px;
+      background: #7a4a25;
+    }
+
+    .sail {
+      position: absolute;
+      left: 58px;
+      top: 2px;
+      width: 52px;
+      height: 42px;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      background: linear-gradient(90deg, #fff1c6, #d2ab6b);
+      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.16);
+    }
+
+    .sail.small {
+      left: 15px;
+      top: 14px;
+      width: 38px;
+      height: 32px;
+      transform: scaleX(-1);
+    }
+
+    .hull {
+      position: absolute;
+      left: 4px;
+      bottom: 5px;
+      width: 112px;
+      height: 30px;
+      border-radius: 0 0 58px 58px;
+      background: linear-gradient(180deg, #8e552a, #3c1f13);
+      border-bottom: 5px solid #1d0d08;
+    }
+
+    .waves {
+      position: absolute;
+      left: -20px;
+      right: -20px;
+      bottom: 0;
+      height: 42px;
+      background:
+        radial-gradient(ellipse at 10% 14%, rgba(89, 190, 215, 0.7) 0 18%, transparent 20%),
+        radial-gradient(ellipse at 32% 36%, rgba(35, 117, 148, 0.72) 0 22%, transparent 24%),
+        radial-gradient(ellipse at 62% 20%, rgba(89, 190, 215, 0.55) 0 18%, transparent 20%),
+        radial-gradient(ellipse at 88% 40%, rgba(35, 117, 148, 0.72) 0 22%, transparent 24%);
+      animation: drift 3.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translateX(-8px); }
+      to { transform: translateX(8px); }
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      width: 62%;
+      padding: 13px 14px 40px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      margin-top: 8px;
+      font-size: 1.25rem;
+      line-height: 1;
+      text-shadow: 0 3px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    .hero-text {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    .stat {
+      min-height: 58px;
+      padding: 9px 7px;
+      border: 1px solid rgba(246, 199, 91, 0.28);
+      border-radius: 7px;
+      background: linear-gradient(180deg, rgba(42, 29, 18, 0.94), rgba(13, 10, 7, 0.92));
+      box-shadow: inset 0 0 0 1px rgba(255, 231, 170, 0.06);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.66rem;
+      font-weight: 750;
+      line-height: 1.1;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 7px;
+      color: var(--cream);
+      font-size: clamp(0.9rem, 4vw, 1.1rem);
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    main {
+      position: relative;
+      min-height: 385px;
+    }
+
+    .tab {
+      display: none;
+      animation: rise 0.26s ease both;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      border: 2px solid #60401e;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(42, 29, 18, 0.94), rgba(11, 9, 7, 0.92)),
+        radial-gradient(circle at 50% 0, rgba(246, 199, 91, 0.12), transparent 42%);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .spin-card {
+      position: relative;
+      overflow: hidden;
+      padding: 14px;
+      background:
+        radial-gradient(circle at 50% 36%, rgba(30, 92, 112, 0.4), transparent 30%),
+        linear-gradient(180deg, rgba(10, 15, 17, 0.72), rgba(12, 8, 5, 0.96)),
+        linear-gradient(135deg, #27180e, #090706);
+    }
+
+    .spin-card::before {
+      content: "";
+      position: absolute;
+      inset: 12px 18px auto;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(255, 225, 122, 0.2), transparent 68%);
+      pointer-events: none;
+    }
+
+    .spin-head {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .spin-head h2 {
+      font-size: 1.1rem;
+    }
+
+    .spin-head .body-copy {
+      font-size: 0.82rem;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      font-size: 1.2rem;
+    }
+
+    .pill {
+      flex: 0 0 auto;
+      border: 1px solid rgba(247, 200, 75, 0.42);
+      border-radius: 5px;
+      padding: 6px 9px;
+      color: var(--gold);
+      background: linear-gradient(180deg, rgba(62, 39, 20, 0.92), rgba(15, 10, 6, 0.94));
+      font-size: 0.75rem;
+      font-weight: 850;
+    }
+
+    .big-number {
+      margin: 10px 0 6px;
+      color: var(--gold);
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .body-copy {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.94rem;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      touch-action: manipulation;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 14px;
+      border: 2px solid #7c541f;
+      border-radius: 7px;
+      color: #fff1c6;
+      background: linear-gradient(180deg, #1e7a43, #0b4d2a 58%, #06331d);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.34), inset 0 1px rgba(255, 232, 152, 0.46);
+      font-weight: 950;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #000;
+      transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
+    }
+
+    .btn:active {
+      transform: translateY(2px) scale(0.99);
+    }
+
+    .btn.secondary {
+      color: var(--cream);
+      background: linear-gradient(180deg, rgba(73, 179, 216, 0.28), rgba(21, 76, 101, 0.92));
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(124, 221, 242, 0.18);
+    }
+
+    .btn.danger {
+      color: #fff7eb;
+      background: linear-gradient(180deg, #ff8f70, #ad3434);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+      filter: grayscale(0.5);
+      transform: none;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.065);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .mini span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 780;
+    }
+
+    .mini strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--cream);
+      font-size: 1rem;
+    }
+
+    .wheel-wrap {
+      display: grid;
+      place-items: center;
+      padding: 10px 0 2px;
+    }
+
+    .casino-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .wheel-wrap {
+      grid-column: 1 / -1;
+      min-height: 318px;
+      border: 1px solid rgba(246, 199, 91, 0.22);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(246, 199, 91, 0.14), transparent 38%),
+        linear-gradient(180deg, rgba(8, 30, 42, 0.7), rgba(10, 7, 5, 0.38));
+      box-shadow: inset 0 0 38px rgba(0, 0, 0, 0.62);
+    }
+
+    .wheel {
+      position: relative;
+      width: min(82vw, 350px);
+      aspect-ratio: 1;
+      border: 13px solid #4b2b12;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          #8f2b20 0 45deg,
+          #2f261b 45deg 90deg,
+          #24583a 90deg 135deg,
+          #8f2b20 135deg 180deg,
+          #17475b 180deg 225deg,
+          #85612a 225deg 270deg,
+          #24583a 270deg 315deg,
+          #2f261b 315deg 360deg
+        );
+      box-shadow:
+        inset 0 0 0 8px rgba(218, 154, 53, 0.42),
+        inset 0 0 0 13px rgba(0, 0, 0, 0.28),
+        0 18px 38px rgba(0, 0, 0, 0.58);
+      transition: transform 1.05s cubic-bezier(0.16, 0.78, 0.22, 1);
+    }
+
+    .wheel::before,
+    .wheel::after {
+      content: "";
+      position: absolute;
+      inset: 48%;
+      border-radius: 999px;
+      background: #1c1008;
+      box-shadow: 0 0 0 18px #c8892f, 0 0 0 29px #3a2110;
+      z-index: 2;
+    }
+
+    .wheel::after {
+      inset: 13%;
+      border: 9px solid rgba(92, 45, 17, 0.88);
+      background:
+        linear-gradient(90deg, transparent 47%, rgba(92, 45, 17, 0.9) 48% 52%, transparent 53%),
+        linear-gradient(0deg, transparent 47%, rgba(92, 45, 17, 0.9) 48% 52%, transparent 53%),
+        linear-gradient(45deg, transparent 47%, rgba(92, 45, 17, 0.9) 48% 52%, transparent 53%),
+        linear-gradient(-45deg, transparent 47%, rgba(92, 45, 17, 0.9) 48% 52%, transparent 53%);
+      box-shadow: none;
+      z-index: 1;
+    }
+
+    .pointer {
+      width: 0;
+      height: 0;
+      margin-bottom: -17px;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 42px solid var(--gold);
+      filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.55));
+      z-index: 3;
+    }
+
+    .wheel-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 3;
+      width: 58px;
+      margin-left: -29px;
+      color: #ffe8a4;
+      font-size: clamp(0.72rem, 3.4vw, 1rem);
+      font-weight: 950;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 0 2px 0 #000, 0 0 8px rgba(0, 0, 0, 0.8);
+      transform: rotate(var(--angle)) translateY(-105px) rotate(calc(-1 * var(--angle)));
+    }
+
+    .wheel-label small {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.1rem;
+    }
+
+    .side-panel {
+      position: relative;
+      min-height: 122px;
+      padding: 12px;
+      border: 2px solid #5e3b1c;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(46, 31, 18, 0.95), rgba(9, 7, 5, 0.95)),
+        radial-gradient(circle at 50% 0, rgba(246, 199, 91, 0.14), transparent 58%);
+      box-shadow: inset 0 0 0 1px rgba(255, 226, 154, 0.08);
+    }
+
+    .banner {
+      display: inline-block;
+      margin: -4px 0 8px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: #2b1605;
+      background: linear-gradient(180deg, #d3a15a, #8e5725);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.34);
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .jackpot-amount,
+    .multiplier-value {
+      color: var(--gold);
+      font-size: 1.55rem;
+      font-weight: 950;
+      line-height: 1;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .panel-copy {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.25;
+    }
+
+    .chest-row,
+    .multiplier-track {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      margin-top: 8px;
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .recent-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .recent-win {
+      padding: 8px;
+      border: 1px solid rgba(246, 199, 91, 0.18);
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--muted);
+      font-size: 0.72rem;
+      line-height: 1.15;
+    }
+
+    .recent-win b {
+      display: block;
+      color: var(--cream);
+      font-size: 0.78rem;
+      margin-bottom: 3px;
+    }
+
+    .world-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .world-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 118px;
+      border: 2px solid #5e3b1c;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.62)),
+        var(--world);
+      background-size: cover;
+      box-shadow: inset 0 0 0 1px rgba(255, 226, 154, 0.08);
+    }
+
+    .world-card::before {
+      content: attr(data-title);
+      position: absolute;
+      left: 12px;
+      top: 10px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: #2b1605;
+      background: linear-gradient(180deg, #d3a15a, #8e5725);
+      font-weight: 950;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.34);
+    }
+
+    .world-card span {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      color: var(--cream);
+      font-weight: 850;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .result {
+      min-height: 60px;
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid rgba(247, 200, 75, 0.17);
+      border-radius: 7px;
+      color: var(--cream);
+      background: rgba(0, 0, 0, 0.36);
+      text-align: center;
+      font-weight: 850;
+      line-height: 1.3;
+    }
+
+    .home-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .quick-card {
+      min-height: 78px;
+      padding: 10px 8px;
+      border: 1px solid rgba(246, 199, 91, 0.28);
+      border-radius: 7px;
+      color: var(--cream);
+      background: linear-gradient(180deg, rgba(47, 31, 18, 0.94), rgba(12, 9, 6, 0.92));
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+      font-weight: 850;
+      text-align: left;
+    }
+
+    .quick-card span {
+      display: block;
+      color: var(--gold);
+      font-size: 1.3rem;
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .quick-card small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 760;
+      line-height: 1.15;
+    }
+
+    .result.flash {
+      animation: flash 0.44s ease;
+    }
+
+    @keyframes flash {
+      0% { transform: scale(0.98); border-color: rgba(247, 200, 75, 0.1); }
+      45% { transform: scale(1.02); border-color: rgba(247, 200, 75, 0.68); }
+      100% { transform: scale(1); border-color: rgba(247, 200, 75, 0.17); }
+    }
+
+    .spots,
+    .cargo-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .spots {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .spot,
+    .cargo {
+      min-height: 82px;
+      border: 1px solid rgba(255, 236, 164, 0.14);
+      border-radius: 7px;
+      color: var(--cream);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+      font-weight: 850;
+      transition: transform 0.16s ease, background 0.16s ease;
+    }
+
+    .spot:active,
+    .cargo:active {
+      transform: scale(0.97);
+    }
+
+    .spot.revealed {
+      color: #2a1805;
+      background: linear-gradient(180deg, #ffe485, #c88a24);
+    }
+
+    .spot.trap {
+      color: #fff5f1;
+      background: linear-gradient(180deg, #ef7c71, #7f2126);
+    }
+
+    .cargo-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cargo {
+      min-height: 74px;
+      text-align: left;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cargo b {
+      display: block;
+      font-size: 1rem;
+    }
+
+    .cargo span {
+      color: var(--muted);
+      display: block;
+      font-size: 0.8rem;
+      margin-top: 3px;
+    }
+
+    .icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(247, 200, 75, 0.14);
+      font-size: 1.35rem;
+    }
+
+    .progress {
+      overflow: hidden;
+      width: 100%;
+      height: 13px;
+      margin-top: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .bar {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--gold-2), var(--gold));
+      transition: width 0.25s ease;
+    }
+
+    .nav {
+      position: fixed;
+      left: 50%;
+      bottom: 12px;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      width: min(calc(100% - 20px), 760px);
+      padding: 8px;
+      border: 2px solid #5b3819;
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(44, 30, 18, 0.95), rgba(9, 7, 5, 0.94));
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(22px);
+      transform: translateX(-50%);
+    }
+
+    .nav button {
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      min-height: 56px;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 0.68rem;
+      font-weight: 850;
+      transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+    }
+
+    .nav button span {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .nav button.active {
+      color: #fff0c4;
+      background: linear-gradient(180deg, #51351c, #1b120b);
+      border: 1px solid rgba(246, 199, 91, 0.5);
+      box-shadow: 0 8px 18px rgba(217, 155, 36, 0.24);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 92px;
+      z-index: 20;
+      width: min(calc(100% - 28px), 460px);
+      padding: 13px 14px;
+      border: 1px solid rgba(247, 200, 75, 0.18);
+      border-radius: 16px;
+      color: var(--cream);
+      background: rgba(7, 24, 38, 0.94);
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-weight: 850;
+      transform: translate(-50%, 18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .toast.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    @media (min-width: 720px) {
+      .app {
+        padding-top: 28px;
+      }
+
+      .hero {
+        min-height: 150px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(8, 1fr);
+      }
+
+      .casino-grid {
+        grid-template-columns: minmax(170px, 0.72fr) minmax(360px, 1.55fr) minmax(170px, 0.72fr);
+      }
+
+      .casino-grid .side-panel:first-child {
+        grid-column: 1;
+      }
+
+      .casino-grid .side-panel:nth-child(2) {
+        grid-column: 3;
+      }
+
+      .wheel-wrap {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        min-height: 430px;
+      }
+
+      .wheel {
+        width: min(44vw, 430px);
+      }
+
+      .wheel-label {
+        transform: rotate(var(--angle)) translateY(-134px) rotate(calc(-1 * var(--angle)));
+      }
+
+      .world-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .cargo-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .cargo {
+        min-height: 128px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    /* Coin Master-inspired mobile shell: brighter, chunkier, and spin-first. */
+    :root {
+      --bg: #0b6da5;
+      --bg-2: #33b9e6;
+      --wood: #7a451f;
+      --wood-2: #aa6428;
+      --panel: rgba(255, 244, 205, 0.94);
+      --card: rgba(255, 250, 228, 0.94);
+      --card-strong: rgba(255, 255, 247, 0.98);
+      --gold: #ffc83d;
+      --gold-2: #f08a19;
+      --cream: #fff7d6;
+      --text: #3f2513;
+      --muted: #6f4d2b;
+      --red: #e24135;
+      --green: #20a84d;
+      --blue: #178dd6;
+      --line: rgba(111, 70, 29, 0.18);
+      --shadow: 0 14px 28px rgba(31, 73, 115, 0.24);
+      --radius: 22px;
+    }
+
+    body {
+      color: var(--text);
+      font-family: "Trebuchet MS", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 16% 10%, rgba(255, 255, 255, 0.9) 0 5%, transparent 6%),
+        radial-gradient(circle at 26% 8%, rgba(255, 255, 255, 0.76) 0 7%, transparent 8%),
+        radial-gradient(circle at 75% 13%, rgba(255, 255, 255, 0.72) 0 6%, transparent 7%),
+        linear-gradient(180deg, #49c6f4 0%, #1390d3 46%, #0870af 66%, #075887 100%);
+    }
+
+    body::before {
+      inset: auto -15% -7%;
+      height: 30vh;
+      background:
+        radial-gradient(ellipse at 20% 90%, #ffd671 0 22%, transparent 23%),
+        radial-gradient(ellipse at 52% 76%, #1eb56c 0 22%, transparent 23%),
+        radial-gradient(ellipse at 80% 86%, #f6c05d 0 19%, transparent 20%),
+        linear-gradient(180deg, transparent 0 28%, #0d679f 29% 48%, #075887 49%);
+      filter: none;
+      opacity: 1;
+    }
+
+    body::after {
+      background-image:
+        radial-gradient(circle at 12% 24%, rgba(255, 255, 255, 0.45) 0 2px, transparent 3px),
+        radial-gradient(circle at 88% 40%, rgba(255, 255, 255, 0.36) 0 2px, transparent 3px);
+      background-size: 90px 120px;
+      mask-image: linear-gradient(to bottom, #000, transparent 68%);
+    }
+
+    .app {
+      width: min(100%, 560px);
+      padding: 10px 10px 104px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 8px;
+      z-index: 8;
+      border: 0;
+      border-radius: 22px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 8px 18px rgba(13, 83, 137, 0.2), inset 0 0 0 2px rgba(255, 255, 255, 0.58);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #fff1a6;
+      background:
+        radial-gradient(circle at 36% 34%, #fff4c8 0 12%, transparent 13%),
+        radial-gradient(circle, #f0a126, #894417 72%);
+      box-shadow: 0 5px 0 #8a4d20, 0 8px 15px rgba(57, 44, 26, 0.24);
+    }
+
+    h1 {
+      color: #fff9da;
+      font-size: clamp(1.2rem, 7vw, 1.65rem);
+      text-transform: none;
+      -webkit-text-stroke: 1px #6d3715;
+      text-shadow: 0 3px 0 #6d3715, 0 5px 12px rgba(0, 0, 0, 0.16);
+    }
+
+    .subtitle {
+      color: #24536b;
+      font-size: 0.73rem;
+      font-weight: 900;
+    }
+
+    .reset {
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(180deg, #ff765f, #d93431);
+      box-shadow: 0 4px 0 #8f241d;
+      font-family: inherit;
+    }
+
+    .hero {
+      min-height: 118px;
+      border: 0;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 80% 18%, #fff5b7 0 12%, transparent 13%),
+        linear-gradient(180deg, rgba(64, 200, 248, 0.9), rgba(40, 159, 218, 0.72)),
+        linear-gradient(135deg, #15a765, #ffd06b 72%);
+      box-shadow: 0 10px 22px rgba(18, 82, 131, 0.22), inset 0 -18px 0 rgba(0, 103, 157, 0.18);
+    }
+
+    .moon {
+      background: radial-gradient(circle at 35% 30%, #fff8c7, #ffd850 65%, #ffad25);
+    }
+
+    .island {
+      background: #20a84d;
+      box-shadow: 0 16px 0 #f5c061;
+    }
+
+    .hero-copy {
+      width: 60%;
+      padding: 13px 14px 38px;
+    }
+
+    .eyebrow {
+      color: #fff9d6;
+      text-shadow: 0 2px 0 #7b421d;
+    }
+
+    .hero-title {
+      color: #fff9d6;
+      font-size: 1.35rem;
+      -webkit-text-stroke: 1px #6d3715;
+      text-shadow: 0 3px 0 #6d3715;
+    }
+
+    .hero-text {
+      color: #fef3c2;
+      font-weight: 900;
+      text-shadow: 0 2px 0 rgba(67, 49, 23, 0.45);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 42px;
+      padding: 6px 10px;
+      border: 3px solid #fff0a5;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffffff, #ffeab1);
+      box-shadow: 0 4px 0 #c17428, 0 7px 14px rgba(36, 75, 112, 0.2);
+    }
+
+    .stat span {
+      color: #7b421d;
+      font-size: 0.66rem;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .stat strong {
+      margin: 0;
+      color: #3f2513;
+      font-size: 1rem;
+      font-weight: 950;
+    }
+
+    .card {
+      border: 0;
+      border-radius: 24px;
+      color: var(--text);
+      background: rgba(255, 248, 218, 0.94);
+      box-shadow: 0 12px 0 rgba(184, 106, 40, 0.72), 0 20px 32px rgba(26, 91, 143, 0.24);
+      padding: 14px;
+    }
+
+    .spin-card {
+      padding: 12px;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(255, 247, 199, 0.94), transparent 34%),
+        linear-gradient(180deg, rgba(255, 245, 191, 0.96), rgba(255, 188, 72, 0.92));
+    }
+
+    .spin-card::before {
+      inset: 58px 18px auto;
+      height: 220px;
+      background: radial-gradient(ellipse, rgba(255, 255, 255, 0.7), transparent 68%);
+    }
+
+    .spin-head {
+      padding: 8px 10px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff, #ffeaa8);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6), 0 4px 0 rgba(193, 112, 38, 0.62);
+    }
+
+    .spin-head h2,
+    .section-title h2 {
+      color: #fff8d7;
+      -webkit-text-stroke: 1px #733a17;
+      text-shadow: 0 3px 0 #733a17;
+    }
+
+    .body-copy,
+    .panel-copy,
+    .quick-card small,
+    .cargo span {
+      color: #71502e;
+      font-weight: 800;
+    }
+
+    .pill {
+      border: 3px solid #fff0a5;
+      border-radius: 999px;
+      color: #5e3619;
+      background: linear-gradient(180deg, #fffdf0, #ffd56a);
+      box-shadow: 0 3px 0 #b76d21;
+    }
+
+    .casino-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .wheel-wrap {
+      order: 1;
+      grid-column: auto;
+      width: 100%;
+      min-height: 324px;
+      border: 0;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9), transparent 36%),
+        radial-gradient(circle at 50% 100%, #26b270 0 18%, transparent 19%),
+        linear-gradient(180deg, #55cef5, #21a2df 58%, #1483c5);
+      box-shadow: inset 0 -12px 0 rgba(3, 110, 159, 0.22), 0 8px 18px rgba(17, 91, 146, 0.18);
+    }
+
+    .side-panel {
+      order: 2;
+      flex: 1 1 calc(50% - 5px);
+      min-height: 104px;
+      border: 0;
+      border-radius: 20px;
+      padding: 10px;
+      background: linear-gradient(180deg, #ffffff, #ffe8a6);
+      box-shadow: 0 5px 0 #c17428, 0 10px 18px rgba(31, 87, 128, 0.16);
+    }
+
+    .banner {
+      margin: 0 0 6px;
+      border-radius: 999px;
+      color: #fff8d8;
+      background: linear-gradient(180deg, #ff7b4f, #d93d2f);
+      box-shadow: 0 3px 0 #8f241d;
+      font-size: 0.7rem;
+      text-shadow: 0 1px 0 #742118;
+    }
+
+    .jackpot-amount,
+    .multiplier-value,
+    .big-number {
+      color: #ffb31f;
+      -webkit-text-stroke: 1px #7a3f13;
+      text-shadow: 0 3px 0 #7a3f13;
+    }
+
+    .wheel {
+      width: min(86vw, 340px);
+      border: 11px solid #ffe17b;
+      background:
+        conic-gradient(
+          #f15b45 0 45deg,
+          #ffe58c 45deg 90deg,
+          #37b66e 90deg 135deg,
+          #f69435 135deg 180deg,
+          #35a7e1 180deg 225deg,
+          #ffe58c 225deg 270deg,
+          #37b66e 270deg 315deg,
+          #f15b45 315deg 360deg
+        );
+      box-shadow:
+        inset 0 0 0 8px rgba(255, 255, 255, 0.42),
+        inset 0 0 0 14px rgba(157, 79, 20, 0.24),
+        0 10px 0 #9e5c22,
+        0 18px 28px rgba(94, 77, 41, 0.32);
+    }
+
+    .wheel::before {
+      background: radial-gradient(circle, #fff1a6, #f0a126 58%, #894417 59%);
+      box-shadow: 0 0 0 18px #ffe17b, 0 6px 0 26px #9e5c22;
+    }
+
+    .wheel::after {
+      border: 7px solid rgba(137, 68, 23, 0.56);
+      opacity: 0.82;
+    }
+
+    .pointer {
+      margin-bottom: -12px;
+      border-left-width: 22px;
+      border-right-width: 22px;
+      border-top: 44px solid #ffdf4d;
+      filter: drop-shadow(0 5px 0 #9e5c22);
+    }
+
+    .wheel-label {
+      color: #fff9dc;
+      font-family: inherit;
+      font-size: clamp(0.72rem, 3vw, 0.95rem);
+      -webkit-text-stroke: 1px #6f3411;
+      text-shadow: 0 2px 0 #6f3411;
+    }
+
+    .btn {
+      min-height: 66px;
+      border: 4px solid #fff0a5;
+      border-radius: 22px;
+      color: #fff8d8;
+      background: linear-gradient(180deg, #38dd66, #16a648 58%, #0a7d31);
+      box-shadow: 0 7px 0 #075a24, 0 14px 24px rgba(24, 94, 55, 0.26);
+      font-size: 1.35rem;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      -webkit-text-stroke: 1px rgba(22, 86, 36, 0.7);
+      text-shadow: 0 3px 0 #075a24;
+    }
+
+    .result {
+      border: 0;
+      border-radius: 18px;
+      color: #5b3317;
+      background: linear-gradient(180deg, #fffdf0, #ffd978);
+      box-shadow: inset 0 0 0 3px #fff2ad, 0 5px 0 #c17428;
+    }
+
+    .recent-strip {
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .recent-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .recent-win {
+      flex: 0 0 116px;
+      border: 0;
+      border-radius: 16px;
+      color: #76542f;
+      background: #fff8d8;
+      box-shadow: 0 4px 0 #d28a2d;
+      font-weight: 850;
+    }
+
+    .recent-win b {
+      color: #3f2513;
+    }
+
+    .quick-card,
+    .cargo,
+    .spot,
+    .mini,
+    .world-card {
+      border: 0;
+      border-radius: 18px;
+      color: #3f2513;
+      background: linear-gradient(180deg, #fffdf0, #ffe295);
+      box-shadow: 0 5px 0 #c17428, 0 10px 18px rgba(31, 87, 128, 0.14);
+    }
+
+    .quick-card {
+      text-align: center;
+      font-weight: 950;
+    }
+
+    .quick-card span {
+      color: inherit;
+      font-size: 1.55rem;
+    }
+
+    .nav {
+      bottom: 10px;
+      width: min(calc(100% - 18px), 540px);
+      border: 0;
+      border-radius: 26px;
+      padding: 8px;
+      background: rgba(255, 246, 209, 0.94);
+      box-shadow: 0 9px 0 #b46a2a, 0 16px 26px rgba(12, 65, 111, 0.3);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav button {
+      min-height: 58px;
+      border-radius: 20px;
+      color: #7b421d;
+      font-family: inherit;
+      font-size: 0.68rem;
+      font-weight: 950;
+    }
+
+    .nav button.active {
+      border: 0;
+      color: #fff8d8;
+      background: linear-gradient(180deg, #ffbd43, #f07c1a);
+      box-shadow: 0 5px 0 #9e521c;
+      text-shadow: 0 2px 0 #8a3f16;
+    }
+
+    .toast {
+      border: 0;
+      border-radius: 20px;
+      color: #5b3317;
+      background: linear-gradient(180deg, #fffdf0, #ffd978);
+      box-shadow: 0 6px 0 #c17428, 0 14px 24px rgba(21, 83, 129, 0.28);
+    }
+
+    @media (min-width: 720px) {
+      .app {
+        width: min(100%, 940px);
+        padding-top: 14px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .casino-grid {
+        display: grid;
+        grid-template-columns: 190px minmax(390px, 1fr) 190px;
+      }
+
+      .wheel-wrap {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        min-height: 440px;
+      }
+
+      .casino-grid .side-panel:first-child {
+        grid-column: 1;
+      }
+
+      .casino-grid .side-panel:nth-child(2) {
+        grid-column: 3;
+      }
+
+      .wheel {
+        width: min(44vw, 420px);
+      }
+
+      .wheel-label {
+        transform: rotate(var(--angle)) translateY(-132px) rotate(calc(-1 * var(--angle)));
+      }
+    }
+
+    .event-rails {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(72px, 1fr));
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .event-chip {
+      position: relative;
+      min-height: 78px;
+      padding: 7px 6px 8px;
+      border: 3px solid #6f3a16;
+      border-radius: 16px;
+      color: #fff7cf;
+      background:
+        linear-gradient(180deg, rgba(66, 43, 23, 0.98), rgba(25, 15, 9, 0.98)),
+        radial-gradient(circle at 50% 10%, rgba(255, 218, 83, 0.28), transparent 48%);
+      box-shadow: 0 5px 0 #32190a, 0 10px 18px rgba(20, 75, 118, 0.22);
+      font-size: 0.68rem;
+      font-weight: 950;
+      line-height: 1.05;
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #2a1207;
+    }
+
+    .event-chip span {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1;
+      margin-bottom: 4px;
+      filter: drop-shadow(0 2px 0 #000);
+    }
+
+    .event-chip small {
+      display: block;
+      width: fit-content;
+      margin: 6px auto 0;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(3, 15, 24, 0.78);
+      font-size: 0.63rem;
+    }
+
+    .slot-stage {
+      position: relative;
+      display: grid;
+      gap: 8px;
+      padding: 6px 0 0;
+    }
+
+    .plunder-board {
+      position: relative;
+      z-index: 2;
+      margin: 0 auto -6px;
+      width: min(100%, 380px);
+      padding: 13px 16px 21px;
+      border: 4px solid #6f3a16;
+      border-radius: 18px;
+      color: #fff6d0;
+      background:
+        linear-gradient(180deg, #6d421e, #2c170b),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 18px);
+      box-shadow: 0 7px 0 #2c170b, 0 14px 18px rgba(52, 43, 29, 0.24);
+      text-align: center;
+    }
+
+    .plunder-board::before {
+      content: "☠";
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border: 4px solid #6f3a16;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffd766, #b7651f);
+      box-shadow: 0 4px 0 #2c170b;
+      transform: translateX(-50%);
+    }
+
+    .plunder-board h2 {
+      color: #fff6d0;
+      font-size: 1.25rem;
+      -webkit-text-stroke: 1px #52240d;
+      text-shadow: 0 3px 0 #52240d;
+    }
+
+    .quest-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 8px;
+      margin-top: 9px;
+    }
+
+    .quest-track {
+      overflow: hidden;
+      height: 24px;
+      border: 3px solid #1f1209;
+      border-radius: 999px;
+      background: #171717;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
+    }
+
+    .quest-track i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(180deg, #ffe082, #f29b27);
+    }
+
+    .quest-row b,
+    .quest-row strong {
+      color: #fff6d0;
+      font-size: 0.98rem;
+      text-shadow: 0 2px 0 #2a1207;
+    }
+
+    .win-ribbon {
+      position: absolute;
+      left: 50%;
+      bottom: -25px;
+      min-width: 142px;
+      padding: 7px 18px;
+      border: 3px solid #6f3a16;
+      border-radius: 10px;
+      color: #fff7d4;
+      background: linear-gradient(180deg, #e45b38, #9d251c);
+      box-shadow: 0 5px 0 #4f160e;
+      font-size: 1.35rem;
+      font-weight: 950;
+      text-shadow: 0 3px 0 #4f160e;
+      transform: translateX(-50%);
+    }
+
+    .slot-machine {
+      position: relative;
+      overflow: hidden;
+      padding: 47px 13px 16px;
+      border: 6px solid #7b421d;
+      border-radius: 25px;
+      background:
+        linear-gradient(90deg, rgba(255, 227, 132, 0.42), transparent 8% 92%, rgba(255, 227, 132, 0.42)),
+        linear-gradient(180deg, #b66d2d, #6e3717 18%, #4e260f 82%, #2e1609);
+      box-shadow: 0 8px 0 #2e1609, 0 18px 28px rgba(31, 72, 109, 0.3);
+    }
+
+    .slot-crown {
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border: 4px solid #7b421d;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffe17b, #bd6b21);
+      box-shadow: 0 5px 0 #4b210d;
+      transform: translateX(-50%);
+    }
+
+    .slot-jackpot {
+      position: relative;
+      z-index: 2;
+      width: min(82%, 300px);
+      margin: 0 auto 8px;
+      padding: 8px 14px;
+      border: 4px solid #7b421d;
+      border-radius: 14px;
+      color: #fff6d0;
+      background: linear-gradient(180deg, #c34a2d, #7e2118);
+      box-shadow: 0 5px 0 #42140d;
+      font-size: 1.55rem;
+      font-weight: 950;
+      text-align: center;
+      text-shadow: 0 3px 0 #42140d;
+    }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      overflow: hidden;
+      border: 5px solid #4d2811;
+      border-radius: 16px;
+      background: #f8e5be;
+      box-shadow: inset 0 0 18px rgba(80, 42, 18, 0.4);
+    }
+
+    .slot-cell {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1 / 0.95;
+      border-right: 2px solid rgba(92, 52, 24, 0.22);
+      border-bottom: 2px solid rgba(92, 52, 24, 0.16);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.65), transparent 42%),
+        linear-gradient(180deg, #fff4d1, #efd3a3);
+      font-size: clamp(1.65rem, 9vw, 3rem);
+      filter: drop-shadow(0 3px 0 rgba(93, 51, 21, 0.26));
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+
+    .slot-cell:nth-child(4n) {
+      border-right: 0;
+    }
+
+    .slot-cell.spin-pop {
+      transform: translateY(-7px) scale(1.08);
+      filter: drop-shadow(0 7px 0 rgba(93, 51, 21, 0.22));
+    }
+
+    .energy-bar {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      width: min(86%, 330px);
+      margin: 12px auto 0;
+      padding: 6px 9px;
+      border: 4px solid #70401b;
+      border-radius: 999px;
+      background: #2b1a0e;
+      color: #fff6d0;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+      font-weight: 950;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .energy-bar i {
+      display: block;
+      height: 19px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe27e, #f29d27);
+      box-shadow: inset 0 2px rgba(255, 255, 255, 0.38);
+    }
+
+    .spin-main {
+      width: min(86%, 340px);
+      min-height: 78px;
+      margin: 18px auto 0;
+      display: block;
+      border: 5px solid #8a4f20;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #ff7856, #d63a2c 56%, #9d201b);
+      box-shadow: 0 8px 0 #5f1a12, 0 16px 26px rgba(53, 61, 73, 0.28);
+      font-size: 2.35rem;
+      -webkit-text-stroke: 2px #7d2518;
+      text-shadow: 0 4px 0 #7d2518;
+    }
+
+    .spin-main::after {
+      content: "HOLD FOR AUTO SPIN";
+      display: block;
+      margin-top: 2px;
+      color: #ffe8a9;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      -webkit-text-stroke: 0;
+      text-shadow: 0 2px 0 #7d2518;
+    }
+
+    @media (max-width: 430px) {
+      .event-rails {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 1px 8px;
+        scrollbar-width: none;
+      }
+
+      .event-rails::-webkit-scrollbar {
+        display: none;
+      }
+
+      .event-chip {
+        flex: 0 0 86px;
+      }
+    }
+
+    /* Final screenshot-matched home layout. */
+    body {
+      min-height: 100dvh;
+      background:
+        radial-gradient(circle at 10% 8%, #ffffff 0 4%, transparent 5%),
+        radial-gradient(circle at 85% 7%, #ffffff 0 7%, transparent 8%),
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.44), transparent 28%),
+        linear-gradient(180deg, #1689d7 0%, #48c3ed 25%, #23add9 42%, #0a84bd 58%, #186d9f 100%);
+    }
+
+    body::before {
+      inset: 0;
+      height: auto;
+      background:
+        radial-gradient(ellipse at 8% 36%, #3db765 0 8%, transparent 9%),
+        radial-gradient(ellipse at 2% 44%, #1f8a48 0 11%, transparent 12%),
+        radial-gradient(ellipse at 96% 39%, #7fc16b 0 10%, transparent 11%),
+        radial-gradient(ellipse at 92% 48%, #1f8a48 0 12%, transparent 13%),
+        radial-gradient(ellipse at 72% 37%, rgba(77, 72, 61, 0.28) 0 12%, transparent 13%),
+        radial-gradient(ellipse at 28% 42%, rgba(53, 84, 84, 0.22) 0 11%, transparent 12%),
+        linear-gradient(180deg, transparent 0 38%, rgba(13, 172, 201, 0.8) 39% 66%, #6a3e1e 67% 100%);
+      opacity: 1;
+      z-index: -3;
+    }
+
+    body::after {
+      inset: auto 0 0;
+      height: 34vh;
+      background:
+        radial-gradient(ellipse at 9% 78%, #5a331a 0 10%, transparent 11%),
+        radial-gradient(ellipse at 90% 78%, #5a331a 0 11%, transparent 12%),
+        repeating-linear-gradient(90deg, #4a2a16 0 42px, #3a2010 42px 47px, #5b351c 47px 86px);
+      mask-image: none;
+      z-index: -2;
+    }
+
+    .app {
+      position: relative;
+      width: min(100%, 430px);
+      min-height: 100dvh;
+      padding: 12px 10px 112px;
+    }
+
+    .topbar {
+      position: relative;
+      top: auto;
+      display: grid;
+      grid-template-columns: minmax(128px, 1fr) 52px;
+      gap: 8px;
+      padding: 0;
+      margin-bottom: 8px;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .brand {
+      min-height: 58px;
+      padding: 6px 9px 6px 6px;
+      border: 3px solid #6a3a18;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #24364a, #102030);
+      box-shadow: 0 4px 0 #261409, 0 8px 14px rgba(0, 0, 0, 0.24);
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border: 3px solid #ad6a25;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 50% 25%, #ffd790 0 11%, transparent 12%),
+        radial-gradient(circle at 50% 42%, #2d1b10 0 30%, transparent 31%),
+        linear-gradient(135deg, #1b4150, #080b10);
+      color: #f4c65c;
+      box-shadow: inset 0 0 0 2px #2a170b;
+    }
+
+    h1 {
+      font-size: 1rem;
+      color: #fff0c4;
+      -webkit-text-stroke: 0;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .subtitle {
+      position: relative;
+      width: 96px;
+      margin-top: 5px;
+      color: #fff1a6;
+      font-size: 0.9rem;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .subtitle::after {
+      content: "";
+      position: absolute;
+      left: 42px;
+      right: 0;
+      bottom: 3px;
+      height: 7px;
+      border: 2px solid #0b1119;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ffc42d 0 58%, #111 59%);
+    }
+
+    .reset {
+      width: 52px;
+      height: 52px;
+      padding: 0;
+      border: 3px solid #6a3a18;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #b46b2f, #603013);
+      box-shadow: 0 4px 0 #261409;
+      font-size: 1.7rem;
+      line-height: 1;
+    }
+
+    .hero {
+      display: none;
+    }
+
+    .stats {
+      position: absolute;
+      top: 18px;
+      left: 150px;
+      right: 68px;
+      z-index: 6;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin: 0;
+      pointer-events: none;
+    }
+
+    .stat {
+      display: none;
+    }
+
+    .stat:nth-child(-n+3) {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      min-height: 26px;
+      padding: 2px 3px 2px 0;
+      border: 2px solid #533018;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #2b2b2b, #090909);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .stat span {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin: -5px 6px -5px -3px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffe16a, #d97b17);
+      box-shadow: 0 2px 0 #6d3611;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .stat.resource-gem span {
+      background: linear-gradient(180deg, #79f5ff, #0789d9);
+    }
+
+    .stat.resource-energy span {
+      background: linear-gradient(180deg, #ff867b, #c93135);
+    }
+
+    .stat strong {
+      color: #fff3cf;
+      font-size: 0.85rem;
+      text-align: center;
+      text-shadow: 0 2px 0 #000;
+      white-space: nowrap;
+    }
+
+    .stat em {
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(180deg, #6be350, #189a25);
+      box-shadow: 0 2px 0 #075b12;
+      font-style: normal;
+      font-weight: 950;
+      pointer-events: auto;
+    }
+
+    main {
+      min-height: calc(100dvh - 120px);
+    }
+
+    .spin-card {
+      min-height: calc(100dvh - 130px);
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .spin-card::before,
+    .spin-head {
+      display: none;
+    }
+
+    .event-rails {
+      position: absolute;
+      inset: 84px 0 auto;
+      z-index: 5;
+      display: block;
+      margin: 0;
+      pointer-events: none;
+    }
+
+    .event-chip {
+      position: absolute;
+      width: 72px;
+      min-height: 78px;
+      padding: 5px 4px;
+      border: 3px solid #6a3a18;
+      border-radius: 13px;
+      background:
+        linear-gradient(180deg, rgba(83, 49, 25, 0.98), rgba(28, 18, 12, 0.98));
+      box-shadow: 0 4px 0 #241106, 0 8px 12px rgba(0, 0, 0, 0.25);
+      font-size: 0.62rem;
+      pointer-events: auto;
+    }
+
+    .event-chip:nth-child(1) { left: 0; top: 0; }
+    .event-chip:nth-child(2) { left: 0; top: 96px; }
+    .event-chip:nth-child(3) { left: 0; top: 192px; }
+    .event-chip:nth-child(4) { right: 0; top: 88px; }
+    .event-chip:nth-child(5) { right: 0; top: 192px; }
+
+    .event-chip span {
+      font-size: 1.7rem;
+    }
+
+    .event-chip small {
+      padding: 3px 5px;
+      font-size: 0.62rem;
+    }
+
+    .slot-stage {
+      width: calc(100% - 104px);
+      max-width: 330px;
+      margin: 72px auto 0;
+      gap: 0;
+    }
+
+    .plunder-board {
+      width: 100%;
+      padding: 18px 16px 28px;
+      border: 4px solid #7b451e;
+      border-radius: 15px;
+      background:
+        linear-gradient(180deg, #6b4424, #2c170c),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 2px, transparent 2px 20px);
+      box-shadow: 0 5px 0 #2a1509, 0 11px 16px rgba(0, 0, 0, 0.28);
+      transform: perspective(260px) rotateX(1deg);
+    }
+
+    .plunder-board h2 {
+      font-size: clamp(1.25rem, 6vw, 1.75rem);
+      line-height: 1;
+    }
+
+    .quest-row {
+      grid-template-columns: auto 1fr auto auto;
+      margin-top: 11px;
+      gap: 7px;
+    }
+
+    .quest-track {
+      height: 23px;
+    }
+
+    .quest-row strong {
+      font-size: 0.78rem;
+    }
+
+    .win-ribbon {
+      bottom: -27px;
+      padding: 6px 18px;
+      font-size: 1.55rem;
+      border-radius: 9px;
+    }
+
+    .slot-machine {
+      margin-top: 20px;
+      padding: 34px 11px 10px;
+      border: 6px solid #7c421c;
+      border-radius: 18px;
+      background:
+        linear-gradient(90deg, #d79539 0 8%, transparent 9% 91%, #d79539 92%),
+        linear-gradient(180deg, #b46b2f, #6b3516 18%, #4a230e 82%, #2a1408);
+      box-shadow: 0 6px 0 #2a1408, 0 15px 24px rgba(0, 0, 0, 0.28);
+    }
+
+    .slot-machine::before,
+    .slot-machine::after {
+      content: "";
+      position: absolute;
+      top: 42px;
+      bottom: 46px;
+      width: 24px;
+      background: linear-gradient(180deg, #f2b447, #8d4c1f);
+      clip-path: polygon(0 0, 100% 8%, 88% 100%, 0 92%);
+    }
+
+    .slot-machine::before {
+      left: -13px;
+    }
+
+    .slot-machine::after {
+      right: -13px;
+      transform: scaleX(-1);
+    }
+
+    .slot-crown {
+      top: -23px;
+      width: 56px;
+      height: 56px;
+      font-size: 1.7rem;
+    }
+
+    .slot-jackpot {
+      width: 84%;
+      margin-bottom: 7px;
+      padding: 4px 10px;
+      font-size: clamp(1.25rem, 6.2vw, 1.85rem);
+    }
+
+    .slot-grid {
+      grid-template-columns: repeat(4, 1fr);
+      border: 4px solid #543016;
+      border-radius: 9px;
+    }
+
+    .slot-cell {
+      aspect-ratio: 1 / 0.9;
+      font-size: clamp(1.45rem, 7.2vw, 2.35rem);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.55), transparent 39%),
+        linear-gradient(180deg, #f9e9c8, #dbc097);
+    }
+
+    .energy-bar {
+      width: 84%;
+      margin-top: 8px;
+      padding: 4px 7px;
+      border-width: 3px;
+    }
+
+    .spin-main {
+      position: relative;
+      z-index: 3;
+      width: min(270px, 68%);
+      min-height: 80px;
+      margin-top: 18px;
+      border: 5px solid #74401a;
+      border-radius: 25px;
+      background: linear-gradient(180deg, #ff6d4f, #d83b2e 54%, #9d201b);
+      box-shadow: 0 7px 0 #4d160f, 0 14px 22px rgba(0, 0, 0, 0.28);
+      font-size: clamp(2.2rem, 13vw, 3.3rem);
+      line-height: 0.9;
+    }
+
+    .spin-main::before,
+    .spin-main::after {
+      pointer-events: none;
+    }
+
+    .spin-main::before {
+      content: "";
+      position: absolute;
+      left: -34px;
+      right: -34px;
+      bottom: -14px;
+      height: 38px;
+      border: 5px solid #5b2e14;
+      border-top: 0;
+      border-radius: 0 0 30px 30px;
+      z-index: -1;
+    }
+
+    .spin-main::after {
+      font-size: 0.66rem;
+      line-height: 1;
+    }
+
+    .result {
+      width: min(280px, 78%);
+      min-height: 40px;
+      margin: 4px auto 0;
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      opacity: 0.96;
+    }
+
+    .home-actions {
+      position: relative;
+      z-index: 4;
+      grid-template-columns: 82px 82px;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: -106px;
+      pointer-events: none;
+    }
+
+    .quick-card {
+      position: relative;
+      min-height: 82px;
+      padding: 7px 5px;
+      border: 3px solid #6a3a18;
+      border-radius: 13px;
+      color: #fff7cf;
+      background: linear-gradient(180deg, #7a4a24, #2b170d);
+      box-shadow: 0 5px 0 #241106;
+      text-shadow: 0 2px 0 #000;
+      pointer-events: auto;
+    }
+
+    .quick-card:nth-child(3) {
+      display: none;
+    }
+
+    .quick-card span {
+      color: #fff0a5;
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .quick-card small {
+      color: #fff4c8;
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .recent-strip {
+      display: none;
+    }
+
+    .nav {
+      width: 100%;
+      max-width: 430px;
+      bottom: 0;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      padding: 8px 8px 6px;
+      border-radius: 18px 18px 0 0;
+      background:
+        linear-gradient(180deg, #5e351d, #25140b),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 34px);
+      box-shadow: 0 -5px 0 #1a0d06, 0 -12px 22px rgba(0, 0, 0, 0.25);
+    }
+
+    .nav button {
+      position: relative;
+      min-height: 72px;
+      border-radius: 12px;
+      color: #fff2c0;
+      background: transparent;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .nav button span {
+      font-size: 1.85rem;
+      filter: drop-shadow(0 3px 0 #000);
+    }
+
+    .nav button.active {
+      margin-top: -24px;
+      min-height: 88px;
+      border: 4px solid #7d451d;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #e6a335, #8f4f1f);
+      box-shadow: 0 6px 0 #3a1b0a;
+    }
+
+    .nav button:not(.active)::after,
+    .quick-card:nth-child(2)::after,
+    .event-chip:nth-child(1)::after {
+      content: "3";
+      position: absolute;
+      right: 5px;
+      top: -8px;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #7b1d12;
+      border-radius: 50%;
+      color: #fff;
+      background: #df3c2b;
+      box-shadow: 0 2px 0 #68150d;
+      font-size: 0.75rem;
+    }
+
+    .event-chip:nth-child(1)::after {
+      content: "2";
+      right: -8px;
+      top: -10px;
+    }
+
+    .nav button:nth-child(1)::after { content: "1"; }
+    .nav button:nth-child(2)::after { content: "5"; }
+    .nav button:nth-child(4)::after { content: "2"; }
+    .nav button:nth-child(5)::after { content: "3"; }
+
+    @media (max-width: 380px) {
+      .app {
+        padding-left: 7px;
+        padding-right: 7px;
+      }
+
+      .stats {
+        left: 136px;
+        right: 62px;
+      }
+
+      .slot-stage {
+        width: calc(100% - 92px);
+      }
+
+      .event-chip {
+        width: 64px;
+        font-size: 0.56rem;
+      }
+
+      .quick-card {
+        width: 74px;
+      }
+    }
+
+    @media (min-width: 760px) {
+      .app {
+        width: min(100%, 1112px);
+        padding: 18px 18px 138px;
+      }
+
+      .topbar {
+        grid-template-columns: 278px 72px;
+      }
+
+      .brand {
+        min-height: 76px;
+        border-radius: 18px;
+      }
+
+      .brand-mark {
+        width: 64px;
+        height: 64px;
+      }
+
+      h1 {
+        font-size: 1.45rem;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+      }
+
+      .reset {
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+      }
+
+      .stats {
+        top: 26px;
+        left: 316px;
+        right: 100px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .stat:nth-child(-n+3) {
+        min-height: 42px;
+      }
+
+      .stat span {
+        width: 52px;
+        height: 52px;
+        margin: -8px 10px -8px -6px;
+        font-size: 1.75rem;
+      }
+
+      .stat strong {
+        font-size: 1.35rem;
+      }
+
+      .stat em {
+        width: 34px;
+        height: 34px;
+        font-size: 1.4rem;
+      }
+
+      .spin-card {
+        min-height: calc(100dvh - 168px);
+      }
+
+      .event-rails {
+        top: 128px;
+      }
+
+      .event-chip {
+        width: 112px;
+        min-height: 126px;
+        border-radius: 18px;
+        font-size: 1rem;
+      }
+
+      .event-chip span {
+        font-size: 3rem;
+      }
+
+      .event-chip small {
+        margin-top: 8px;
+        font-size: 0.9rem;
+      }
+
+      .event-chip:nth-child(1) { left: 16px; top: 0; }
+      .event-chip:nth-child(2) { left: 16px; top: 154px; }
+      .event-chip:nth-child(3) { left: 16px; top: 308px; }
+      .event-chip:nth-child(4) { right: 16px; top: 154px; }
+      .event-chip:nth-child(5) { right: 16px; top: 308px; }
+
+      .slot-stage {
+        width: 560px;
+        max-width: 560px;
+        margin-top: 74px;
+      }
+
+      .plunder-board {
+        padding: 25px 28px 38px;
+        border-radius: 20px;
+      }
+
+      .plunder-board h2 {
+        font-size: 2rem;
+      }
+
+      .quest-track {
+        height: 34px;
+      }
+
+      .quest-row b,
+      .quest-row strong {
+        font-size: 1.25rem;
+      }
+
+      .win-ribbon {
+        bottom: -36px;
+        min-width: 220px;
+        font-size: 2.3rem;
+      }
+
+      .slot-machine {
+        margin-top: 32px;
+        padding: 66px 22px 22px;
+        border-radius: 28px;
+      }
+
+      .slot-crown {
+        top: -30px;
+        width: 82px;
+        height: 82px;
+        font-size: 2.5rem;
+      }
+
+      .slot-jackpot {
+        font-size: 2.55rem;
+      }
+
+      .slot-cell {
+        font-size: 3.6rem;
+      }
+
+      .energy-bar {
+        width: 76%;
+        margin-top: 18px;
+        font-size: 1.18rem;
+      }
+
+      .spin-main {
+        width: 390px;
+        min-height: 100px;
+        margin-top: 26px;
+        font-size: 4rem;
+      }
+
+      .result {
+        width: 390px;
+        font-size: 1rem;
+      }
+
+      .home-actions {
+        width: 850px;
+        max-width: calc(100% - 120px);
+        margin: -132px auto 0;
+        grid-template-columns: 128px 128px;
+      }
+
+      .quick-card {
+        min-height: 128px;
+        font-size: 1.35rem;
+      }
+
+      .quick-card span {
+        font-size: 3.3rem;
+      }
+
+      .quick-card small {
+        font-size: 0.82rem;
+      }
+
+      .nav {
+        max-width: 1112px;
+        min-height: 126px;
+        padding: 12px 24px 10px;
+      }
+
+      .nav button {
+        min-height: 102px;
+        font-size: 1.25rem;
+      }
+
+      .nav button span {
+        font-size: 3.1rem;
+      }
+
+      .nav button.active {
+        min-height: 126px;
+        margin-top: -38px;
+      }
+    }
+
+    /* Use the supplied reference image as the home backdrop. */
+    body {
+      background: #117fbc;
+    }
+
+    body::before {
+      inset: 0;
+      height: auto;
+      background:
+        linear-gradient(180deg, rgba(15, 119, 183, 0.06), rgba(15, 119, 183, 0.08) 42%, rgba(44, 21, 9, 0.16) 100%),
+        url("pirate-cove-reference-bg.png") center top / cover no-repeat;
+      filter: none;
+      opacity: 1;
+      z-index: -3;
+    }
+
+    body::after {
+      inset: auto 0 0;
+      height: 24vh;
+      background: linear-gradient(180deg, transparent, rgba(34, 17, 8, 0.48));
+      mask-image: none;
+      z-index: -2;
+    }
+
+    .event-rails {
+      display: none;
+    }
+
+    .slot-stage {
+      margin-top: 86px;
+    }
+
+    @media (min-width: 760px) {
+      .slot-stage {
+        margin-top: 92px;
+      }
+    }
+
+    .fleet-collection {
+      color: #f8e6ba;
+      background:
+        linear-gradient(180deg, rgba(17, 14, 10, 0.96), rgba(5, 4, 3, 0.97)),
+        radial-gradient(circle at 50% 0, rgba(188, 95, 34, 0.24), transparent 42%);
+      box-shadow: 0 8px 0 #190c05, 0 18px 28px rgba(0, 0, 0, 0.36);
+    }
+
+    .fleet-top {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+
+    .fleet-title-block h2 {
+      color: #f9d47b;
+      font-size: 1.8rem;
+      text-transform: uppercase;
+      text-shadow: 0 3px 0 #3b1608;
+    }
+
+    .fleet-title-block .body-copy {
+      color: #c9a66c;
+    }
+
+    .fleet-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .fleet-summary span,
+    .fleet-stats-row .mini {
+      padding: 9px;
+      border: 2px solid #5a3518;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #2c1a0d, #0f0a06);
+      color: #c9a66c;
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .fleet-summary b,
+    .fleet-stats-row strong {
+      display: block;
+      margin-top: 3px;
+      color: #ffe49c;
+      font-size: 0.95rem;
+    }
+
+    .fleet-progress {
+      border: 2px solid #5a3518;
+      background: #090604;
+    }
+
+    .fleet-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .fleet-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      padding: 8px 8px 58px;
+      border: 3px solid #875226;
+      border-radius: 11px;
+      background: linear-gradient(180deg, #1c120b, #050403);
+      box-shadow: inset 0 0 0 1px rgba(255, 221, 142, 0.16), 0 6px 0 #1a0c05;
+    }
+
+    .fleet-card.rare {
+      border-color: #2f75a5;
+    }
+
+    .fleet-card.epic {
+      border-color: #823eb3;
+    }
+
+    .fleet-card.legendary {
+      border-color: #d28520;
+    }
+
+    .fleet-card-art {
+      height: 118px;
+      border: 2px solid rgba(255, 222, 146, 0.22);
+      border-radius: 8px;
+      background: var(--art);
+      background-size: cover;
+      box-shadow: inset 0 -28px 26px rgba(0, 0, 0, 0.38);
+    }
+
+    .captain-art { --art: radial-gradient(circle at 50% 34%, #d9a35c 0 12%, transparent 13%), linear-gradient(135deg, #5a331a, #d8b071 48%, #172638 49%); }
+    .pearl-art { --art: radial-gradient(ellipse at 52% 58%, #05080b 0 20%, transparent 21%), linear-gradient(135deg, #0d1c2b, #24415b 48%, #071018); }
+    .chest-art { --art: radial-gradient(ellipse at 58% 52%, #f2b642 0 18%, transparent 19%), linear-gradient(135deg, #321a09, #a0601f 50%, #1d0d04); }
+    .flag-art { --art: radial-gradient(ellipse at 55% 42%, #0a0a0a 0 26%, transparent 27%), linear-gradient(135deg, #1a425f, #9dc4d8 48%, #0d2637); }
+    .cannon-art { --art: radial-gradient(ellipse at 48% 58%, #1b1b1b 0 18%, transparent 19%), linear-gradient(135deg, #73401d, #b8c8c9 50%, #213849); }
+    .storm-art { --art: linear-gradient(120deg, transparent 47%, #e8f5ff 48%, transparent 51%), linear-gradient(135deg, #0b1722, #315574 52%, #070b10); }
+    .compass-art { --art: radial-gradient(circle at 50% 50%, #e5a72d 0 24%, #513014 25% 30%, transparent 31%), linear-gradient(135deg, #2e1808, #a2671d 50%, #100805); }
+    .kraken-art { --art: radial-gradient(ellipse at 55% 55%, #16111d 0 26%, transparent 27%), radial-gradient(ellipse at 30% 45%, #37204f 0 18%, transparent 19%), linear-gradient(135deg, #160e21, #42536a 52%, #08050c); }
+
+    .rarity {
+      width: fit-content;
+      margin: -13px auto 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      color: #fff2bf;
+      background: linear-gradient(180deg, #9b2b21, #441009);
+      box-shadow: 0 2px 0 #000;
+      font-size: 0.62rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      text-shadow: 0 1px 0 #000;
+    }
+
+    .fleet-card h3 {
+      color: #ffe49c;
+      font-size: 1rem;
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #000;
+    }
+
+    .fleet-card p {
+      margin-top: 7px;
+      color: #f1dfb2;
+      font-size: 0.76rem;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .card-level {
+      position: absolute;
+      left: 8px;
+      bottom: 10px;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 3px solid #d9a74a;
+      border-radius: 50%;
+      color: #fff3c5;
+      background: #1a1009;
+      box-shadow: 0 3px 0 #000;
+      font-weight: 950;
+    }
+
+    .card-upgrade {
+      position: absolute;
+      right: 8px;
+      bottom: 10px;
+      min-width: 86px;
+      min-height: 36px;
+      border: 2px solid #8ed8ff;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(180deg, #26a8f2, #0d5e9b);
+      box-shadow: 0 3px 0 #063657;
+      font-weight: 950;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #063657;
+    }
+
+    .card-upgrade:disabled {
+      filter: grayscale(0.7);
+      opacity: 0.55;
+    }
+
+    @media (min-width: 760px) {
+      .fleet-top {
+        grid-template-columns: 1fr 360px;
+      }
+
+      .fleet-card-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    /* Fixed iPhone game viewport: no page scrolling, clean pinned HUD. */
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
+    body {
+      position: fixed;
+      inset: 0;
+    }
+
+    .app {
+      width: min(100vw, 430px);
+      height: 100dvh;
+      min-height: 0;
+      overflow: hidden;
+      padding: 84px 10px 108px;
+    }
+
+    .topbar {
+      position: fixed;
+      top: max(8px, env(safe-area-inset-top));
+      left: 50%;
+      z-index: 30;
+      width: min(calc(100vw - 18px), 430px);
+      height: 58px;
+      grid-template-columns: 128px 52px;
+      justify-content: space-between;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .brand,
+    .reset {
+      pointer-events: auto;
+    }
+
+    .brand {
+      min-height: 54px;
+      padding: 5px 8px 5px 5px;
+      border-width: 2px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(37, 55, 73, 0.95), rgba(13, 25, 37, 0.95));
+    }
+
+    .brand-mark {
+      width: 43px;
+      height: 43px;
+      border-width: 2px;
+      font-size: 1.15rem;
+    }
+
+    h1 {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+
+    .subtitle {
+      width: 76px;
+      margin-top: 4px;
+      font-size: 0.78rem;
+    }
+
+    .subtitle::after {
+      left: 34px;
+      height: 6px;
+      bottom: 2px;
+    }
+
+    .reset {
+      justify-self: end;
+      width: 50px;
+      height: 50px;
+      border-width: 2px;
+      border-radius: 13px;
+    }
+
+    .menu-popover {
+      position: absolute;
+      right: 0;
+      top: 58px;
+      min-width: 142px;
+      padding: 8px;
+      border: 3px solid #6a3a18;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(58, 35, 18, 0.98), rgba(18, 11, 7, 0.98));
+      box-shadow: 0 5px 0 #261409, 0 12px 18px rgba(0, 0, 0, 0.28);
+      pointer-events: auto;
+    }
+
+    .menu-popover button {
+      width: 100%;
+      min-height: 38px;
+      border-radius: 10px;
+      color: #fff2c0;
+      background: linear-gradient(180deg, #c74735, #842116);
+      box-shadow: 0 3px 0 #3d0d08;
+      font-weight: 950;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #3d0d08;
+    }
+
+    .stats {
+      position: fixed;
+      top: max(14px, calc(env(safe-area-inset-top) + 6px));
+      left: 50%;
+      right: auto;
+      z-index: 31;
+      width: min(172px, calc(100vw - 160px));
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 5px;
+      transform: translateX(-45%);
+      pointer-events: none;
+    }
+
+    .stat,
+    .stat:nth-child(-n+3) {
+      display: none;
+    }
+
+    .stat.resource-coin,
+    .stat.resource-shield {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      min-height: 25px;
+      padding: 2px 3px 2px 0;
+    }
+
+    .stat.resource-shield span {
+      background: linear-gradient(180deg, #c7f1ff, #277cc6);
+    }
+
+    .stat span {
+      width: 30px;
+      height: 30px;
+      margin: -5px 5px -5px -3px;
+      font-size: 1rem;
+    }
+
+    .stat strong {
+      font-size: 0.78rem;
+    }
+
+    .stat em {
+      width: 21px;
+      height: 21px;
+      font-size: 0.82rem;
+    }
+
+    main {
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .tab,
+    .tab.active {
+      height: 100%;
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    .card:not(.spin-card) {
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    .spin-card {
+      min-height: 0;
+      height: 100%;
+    }
+
+    .slot-stage {
+      margin-top: 8px;
+    }
+
+    .fleet-collection {
+      height: 100%;
+      padding: 10px;
+    }
+
+    .fleet-top {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .fleet-title-block h2 {
+      font-size: 1.25rem;
+    }
+
+    .fleet-title-block .body-copy {
+      display: none;
+    }
+
+    .fleet-summary {
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .fleet-summary span,
+    .fleet-stats-row .mini {
+      padding: 6px;
+      font-size: 0.62rem;
+    }
+
+    .fleet-summary b,
+    .fleet-stats-row strong {
+      font-size: 0.74rem;
+    }
+
+    .fleet-progress {
+      height: 9px;
+      margin-top: 6px;
+    }
+
+    .fleet-stats-row {
+      margin-top: 8px;
+      gap: 6px;
+    }
+
+    .fleet-card-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .fleet-card {
+      min-height: 154px;
+      padding: 5px 5px 42px;
+      border-width: 2px;
+      border-radius: 9px;
+    }
+
+    .fleet-card:nth-child(n+5) {
+      display: none;
+    }
+
+    .fleet-card-art {
+      height: 62px;
+      border-width: 1px;
+    }
+
+    .rarity {
+      margin-top: -10px;
+      margin-bottom: 3px;
+      padding: 2px 7px;
+      font-size: 0.48rem;
+    }
+
+    .fleet-card h3 {
+      font-size: 0.68rem;
+    }
+
+    .fleet-card p {
+      margin-top: 4px;
+      font-size: 0.54rem;
+      line-height: 1.12;
+    }
+
+    .card-level {
+      width: 28px;
+      height: 28px;
+      left: 6px;
+      bottom: 7px;
+      font-size: 0.76rem;
+    }
+
+    .card-upgrade {
+      right: 6px;
+      bottom: 7px;
+      min-width: 68px;
+      min-height: 28px;
+      font-size: 0.58rem;
+    }
+
+    @media (max-width: 370px) {
+      .stats {
+        width: 144px;
+        transform: translateX(-42%);
+      }
+
+      .brand {
+        width: 118px;
+      }
+
+      h1 {
+        font-size: 0.82rem;
+      }
+    }
+
+    /* Cleaner top HUD: name left, coins only center, menu right. */
+    .app {
+      padding-top: 66px;
+    }
+
+    .topbar {
+      height: 46px;
+      grid-template-columns: 122px 46px;
+      align-items: start;
+    }
+
+    .brand {
+      width: 122px;
+      min-height: 40px;
+      padding: 0 10px;
+      display: flex;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .brand-mark,
+    .subtitle,
+    .subtitle::after {
+      display: none;
+    }
+
+    .brand h1 {
+      white-space: nowrap;
+      font-size: 0.92rem;
+      line-height: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .reset {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 1.45rem;
+    }
+
+    .menu-popover {
+      top: 48px;
+    }
+
+    .stats {
+      top: max(14px, calc(env(safe-area-inset-top) + 6px));
+      width: 152px;
+      transform: translateX(-50%);
+    }
+
+    .stat.resource-coin {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      min-height: 30px;
+    }
+
+    .stat.resource-energy,
+    .stat.resource-shield {
+      display: none;
+    }
+
+    .stat.resource-coin span {
+      width: 36px;
+      height: 36px;
+      margin: -6px 7px -6px -4px;
+      font-size: 1.15rem;
+      color: transparent;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 214, 80, 0.32), transparent 62%),
+        url("coin-hud-icon.png") center / cover no-repeat;
+    }
+
+    .stat.resource-coin strong {
+      font-size: 0.92rem;
+    }
+
+    .plunder-board::before {
+      display: none;
+    }
+
+    .slot-stage {
+      margin-top: 0;
+    }
+
+    @media (min-width: 760px) {
+      .topbar {
+        grid-template-columns: 170px 58px;
+      }
+
+      .brand {
+        width: 170px;
+        min-height: 54px;
+      }
+
+      .brand h1 {
+        font-size: 1.22rem;
+        line-height: 54px;
+      }
+
+      .reset {
+        width: 58px;
+        height: 58px;
+      }
+
+      .stats {
+        width: 230px;
+      }
+
+      .stat.resource-coin {
+        min-height: 42px;
+      }
+
+      .stat.resource-coin strong {
+        font-size: 1.35rem;
+      }
+
+      .slot-stage {
+        margin-top: 28px;
+      }
+    }
+
+    /* Reference artwork for the plunder board and SPIN control. */
+    .brand {
+      width: 136px;
+      justify-content: flex-start;
+    }
+
+    .topbar {
+      grid-template-columns: 136px 46px;
+    }
+
+    .brand h1 {
+      width: 100%;
+      font-size: 0.78rem;
+      text-align: left;
+    }
+
+    .plunder-board {
+      aspect-ratio: 1488 / 632;
+      width: min(100%, 354px);
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: url("plunder-board-art.png") center / contain no-repeat;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .plunder-board > * {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spin-main {
+      position: fixed;
+      left: 50%;
+      bottom: calc(88px + env(safe-area-inset-bottom));
+      z-index: 24;
+      aspect-ratio: 1186 / 400;
+      width: min(78vw, 330px);
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      color: transparent;
+      background: url("spin-button-art.png") center / contain no-repeat;
+      box-shadow: none;
+      -webkit-text-stroke: 0;
+      text-shadow: none;
+      transform: translateX(-50%);
+    }
+
+    .slot-machine {
+      aspect-ratio: 1230 / 880;
+      width: min(90vw, 348px);
+      margin: 8px auto 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      position: relative;
+      background: url("slot-frame-art.png") center / contain no-repeat;
+      box-shadow: none;
+    }
+
+    .slot-machine::before,
+    .slot-machine::after,
+    .slot-crown,
+    .slot-jackpot,
+    .energy-bar {
+      display: none;
+    }
+
+    .slot-grid {
+      position: absolute;
+      left: 13.5%;
+      top: 28%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 73%;
+      height: 44%;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .slot-cell {
+      border: 0;
+      aspect-ratio: auto;
+      color: transparent;
+      background-color: transparent;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 76% auto;
+      filter: drop-shadow(0 5px 4px rgba(61, 31, 8, 0.34));
+    }
+
+    .slot-cell.spin-pop {
+      transform: translateY(-4px) scale(1.04);
+      filter: drop-shadow(0 8px 5px rgba(61, 31, 8, 0.28));
+    }
+
+    .slot-cell.reel-spin {
+      animation: reelFlicker 0.16s linear infinite;
+    }
+
+    @keyframes reelFlicker {
+      0% { transform: translateY(-7px); opacity: 0.72; }
+      100% { transform: translateY(7px); opacity: 1; }
+    }
+
+    .slot-machine.spin-pop {
+      animation: machineBump 0.28s ease;
+    }
+
+    @keyframes machineBump {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+
+    .spin-main::before,
+    .spin-main::after {
+      content: none;
+      display: none;
+    }
+
+    @media (min-width: 760px) {
+      .brand {
+        width: 178px;
+      }
+
+      .topbar {
+        grid-template-columns: 178px 58px;
+      }
+
+      .brand h1 {
+        font-size: 1.04rem;
+      }
+
+      .plunder-board {
+        width: 620px;
+      }
+
+      .spin-main {
+        width: 420px;
+        bottom: 132px;
+      }
+
+      .slot-machine {
+        width: 560px;
+      }
+    }
+
+    /* Final iPhone fit pass: fixed zones for board, machine, result, and button. */
+    .slot-stage {
+      position: fixed;
+      left: 50%;
+      top: calc(62px + env(safe-area-inset-top));
+      z-index: 12;
+      width: min(92vw, 370px);
+      margin: 0;
+      transform: translateX(-50%);
+    }
+
+    .plunder-board {
+      width: min(92vw, 360px);
+      margin: 0 auto;
+    }
+
+    .slot-machine {
+      width: min(80vw, 310px);
+      margin: -2px auto 0;
+    }
+
+    .spin-main {
+      bottom: calc(78px + env(safe-area-inset-bottom));
+      width: min(70vw, 292px);
+    }
+
+    .result {
+      position: fixed;
+      left: 50%;
+      bottom: calc(156px + env(safe-area-inset-bottom));
+      z-index: 23;
+      width: min(76vw, 270px);
+      min-height: 34px;
+      margin: 0;
+      padding: 6px 9px;
+      transform: translateX(-50%);
+    }
+
+    .home-actions {
+      position: fixed;
+      left: 50%;
+      bottom: calc(88px + env(safe-area-inset-bottom));
+      z-index: 20;
+      width: min(94vw, 392px);
+      margin: 0;
+      transform: translateX(-50%);
+    }
+
+    .quick-card {
+      width: 72px;
+      min-height: 72px;
+    }
+
+    @media (max-height: 720px) {
+      .slot-stage {
+        top: calc(56px + env(safe-area-inset-top));
+      }
+
+      .plunder-board {
+        width: min(84vw, 320px);
+      }
+
+      .slot-machine {
+        width: min(70vw, 260px);
+      }
+
+      .result {
+        bottom: calc(142px + env(safe-area-inset-bottom));
+      }
+
+      .spin-main {
+        width: min(66vw, 250px);
+      }
+    }
+
+    @media (min-width: 760px) {
+      .slot-stage {
+        top: 86px;
+        width: 650px;
+      }
+
+      .plunder-board {
+        width: 620px;
+      }
+
+      .slot-machine {
+        width: 520px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">☠</div>
+        <div>
+          <h1 id="accountName">Captain Jack Lv 1</h1>
+          <p class="subtitle">⭐ 18</p>
         </div>
-        <div class="resource-pill">
-          <span class="bolt">S</span>
-          <strong id="spinsLeft">10</strong>
-        </div>
-        <button class="menu-button" id="viewToggle">Build</button>
-      </header>
+      </div>
+      <button class="reset" id="menuBtn" aria-label="Open menu">☰</button>
+      <div class="menu-popover" id="menuPopover" hidden>
+        <button id="resetBtn">Reset Game</button>
+      </div>
+    </header>
 
-      <section class="view spin-view active" id="spinView" aria-label="Spin area">
-        <div class="brand-row">
-          <div class="captain-portrait"></div>
-          <div>
-            <p class="eyebrow">Pirate Plunder</p>
-            <h1>Captain's Spin</h1>
-          </div>
-          <button class="small-green" id="toBuildButton">Cove</button>
+    <section class="hero" aria-label="Pirate cove scene">
+      <div class="hero-art" aria-hidden="true">
+        <div class="moon"></div>
+        <div class="ship">
+          <div class="mast"></div>
+          <div class="sail"></div>
+          <div class="sail small"></div>
+          <div class="hull"></div>
         </div>
+        <div class="island"></div>
+        <div class="palm"></div>
+        <div class="waves"></div>
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">Captain's Ledger</p>
+        <h2 class="hero-title" id="heroTitle">Beach Camp</h2>
+        <p class="hero-text" id="heroText">Build a feared hideout from a scrappy shore camp.</p>
+      </div>
+    </section>
 
-        <section class="slot-machine" aria-label="Pirate slot machine">
-          <div class="slot-roof">
+    <section class="stats" aria-label="Player stats">
+      <div class="stat resource-coin"><span>🪙</span><strong id="goldStat">0</strong><em>+</em></div>
+      <div class="stat compact-stat"><span>Cove</span><strong id="coveStat">1</strong></div>
+      <div class="stat compact-stat"><span>Fleet</span><strong id="fleetStat">1</strong></div>
+      <div class="stat compact-stat"><span>Maps</span><strong id="mapsStat">0</strong></div>
+      <div class="stat compact-stat"><span>Raid</span><strong id="raidStat">0</strong></div>
+      <div class="stat compact-stat"><span>Shots</span><strong id="cannonStat">0</strong></div>
+    </section>
+
+    <main>
+      <section class="tab active" id="tab-spin">
+        <div class="card spin-card">
+          <div class="spin-head">
             <div>
-              <p class="eyebrow">Mode</p>
-              <h2 id="resultTitle">Ready to Plunder</h2>
+              <h2>Pirate Spin</h2>
+              <p class="body-copy">Match loot, plunder gold, and unlock raids.</p>
             </div>
-            <div class="shield-pill">Shield <strong id="shieldCount">1</strong></div>
+            <span class="pill"><span id="spinPill">25</span> spins</span>
           </div>
-
-          <div class="reel-window">
-            <div class="reel" id="reelOne"></div>
-            <div class="reel" id="reelTwo"></div>
-            <div class="reel" id="reelThree"></div>
+          <div class="slot-stage">
+            <div class="plunder-board">
+              <h2>Plunder the Coves!</h2>
+              <div class="quest-row">
+                <span>🏴‍☠️</span>
+                <div class="quest-track"><i style="width: 30%"></i></div>
+                <b>3/10</b>
+                <strong>10M</strong>
+              </div>
+              <div class="win-ribbon">Win x50</div>
+            </div>
+            <div class="slot-machine" aria-label="Pirate slot machine">
+              <div class="slot-crown">☠</div>
+              <div class="slot-jackpot">50,000 <span>🪙</span></div>
+              <div class="slot-grid" id="slotGrid">
+                <div class="slot-cell">🪙</div>
+                <div class="slot-cell">🏴‍☠️</div>
+                <div class="slot-cell">🧰</div>
+                <div class="slot-cell">🧰</div>
+                <div class="slot-cell">🏴‍☠️</div>
+                <div class="slot-cell">💣</div>
+                <div class="slot-cell">☠</div>
+                <div class="slot-cell">🪙</div>
+                <div class="slot-cell">🪙</div>
+                <div class="slot-cell">🛢</div>
+                <div class="slot-cell">🧰</div>
+                <div class="slot-cell">🍾</div>
+              </div>
+              <div class="energy-bar"><span>⚡</span><i id="energyFill"></i><b id="energyText">25/25</b></div>
+            </div>
           </div>
-
-          <div class="bet-strip">
-            <span>Map pieces <strong id="mapCount">0/3</strong></span>
-            <span>Bet x1</span>
+          <button class="btn spin-main" id="spinBtn">Spin</button>
+          <div class="result" id="spinResult">Tap SPIN to plunder the cove.</div>
+          <div class="home-actions" aria-label="Quick actions">
+            <button class="quick-card" data-tab="maps"><span>🗺</span>Map<small id="homeMaps">0 maps ready</small></button>
+            <button class="quick-card" data-tab="cove"><span>🔨</span>Build<small id="homeCove">Beach Camp</small></button>
+            <button class="quick-card" data-tab="raid"><span>⚔</span>Raid<small id="homeRaid">0 tokens</small></button>
           </div>
-
-          <p class="result-text" id="resultText">Match pirate symbols to win gold, raids, shields, maps, and attacks.</p>
-        </section>
-
-        <section class="event-panel" id="eventPanel" hidden>
-          <h2 id="eventTitle">Raid Ready</h2>
-          <p id="eventText">Choose your move.</p>
-          <div class="event-actions" id="eventActions"></div>
-        </section>
-
-        <button class="big-spin" id="spinButton">Spin</button>
-        <button class="daily-button" id="dailyButton">Daily Chest</button>
+        </div>
       </section>
 
-      <section class="view build-view" id="buildView" aria-label="Build area">
-        <div class="build-top">
-          <div>
-            <p class="eyebrow">Captain's Cove</p>
-            <h1>Build Area</h1>
-          </div>
-          <button class="small-green" id="toSpinButton">Spin</button>
-        </div>
-
-        <div class="island-map" id="islandMap" aria-label="Pirate cove upgrade map">
-          <div class="path"></div>
-          <div class="smoke smoke-one"></div>
-          <div class="smoke smoke-two"></div>
-          <div class="waterfall"></div>
-          <button class="map-target target-dock" data-map-upgrade="dock"><span></span>Dock</button>
-          <button class="map-target target-tavern" data-map-upgrade="tavern"><span></span>Tavern</button>
-          <button class="map-target target-shipyard" data-map-upgrade="shipyard"><span></span>Yard</button>
-          <button class="map-target target-fort" data-map-upgrade="fort"><span></span>Fort</button>
-          <button class="map-target target-vault" data-map-upgrade="vault"><span></span>Vault</button>
-        </div>
-
-        <section class="build-sheet">
-          <div class="section-heading">
+      <section class="tab" id="tab-cove">
+        <div class="card">
+          <div class="section-title">
             <div>
-              <p class="eyebrow">Upgrade</p>
-              <h2>Tap a Cove Target</h2>
+              <h2 id="coveTitle">Beach Camp</h2>
+              <p class="body-copy">Your secret shore base grows richer with every upgrade.</p>
+            </div>
+            <span class="pill">Level <span id="coveLevelLabel">1</span></span>
+          </div>
+          <div class="big-number" id="coveCost">75 gold</div>
+          <p class="body-copy" id="coveNext">Next title at level 5: Smuggler Cove.</p>
+          <div class="progress"><div class="bar" id="coveProgress"></div></div>
+          <button class="btn" id="upgradeCoveBtn">Upgrade Pirate Cove</button>
+          <div class="world-grid" aria-label="Cove designs">
+            <div class="world-card" data-title="1. Emerald Cove" style="--world: radial-gradient(circle at 18% 20%, #69c681, transparent 18%), radial-gradient(circle at 78% 30%, #75d1ee, transparent 20%), linear-gradient(135deg, #174f3a, #0a6c8c 48%, #d9aa58 49%, #80521f 72%, #14351d);">
+              <span>Tropical lagoon with palm cliffs and calm treasure waters.</span>
+            </div>
+            <div class="world-card" data-title="2. Skull Rock Cove" style="--world: radial-gradient(circle at 70% 38%, #c7b99a 0 15%, #211b16 16% 22%, transparent 23%), linear-gradient(135deg, #10171c, #26384a 45%, #0b0d0e 46%, #1c130d);">
+              <span>A haunted rock harbor for higher cove levels.</span>
+            </div>
+            <div class="world-card" data-title="3. Stormy Abyss Cove" style="--world: linear-gradient(115deg, transparent 48%, rgba(210, 239, 255, 0.8) 49%, transparent 51%), radial-gradient(circle at 62% 24%, #8fc9ef, transparent 13%), linear-gradient(135deg, #08131d, #12344b 48%, #05070a);">
+              <span>Lightning, wrecks, and dangerous late-game seas.</span>
             </div>
           </div>
-          <div class="buildings" id="buildings"></div>
-        </section>
+        </div>
+      </section>
+
+      <section class="tab" id="tab-fleet">
+        <div class="card fleet-collection">
+          <div class="fleet-top">
+            <div class="fleet-title-block">
+              <p class="eyebrow">Card Collection</p>
+              <h2 id="fleetTitle">Rowboat</h2>
+              <p class="body-copy" id="fleetNext">Next title at level 5: Sloop.</p>
+            </div>
+            <div class="fleet-summary">
+              <span>Fleet Level <b id="fleetLevelLabel">1</b></span>
+              <span>Upgrade Cost <b id="fleetCost">90 gold</b></span>
+            </div>
+          </div>
+          <div class="progress fleet-progress"><div class="bar" id="fleetProgress"></div></div>
+          <div class="mini-grid fleet-stats-row">
+            <div class="mini"><span>Raid multiplier</span><strong id="raidBoost">1.05x</strong></div>
+            <div class="mini"><span>Current ship</span><strong id="shipMini">Rowboat</strong></div>
+          </div>
+          <div class="fleet-card-grid" aria-label="Fleet card collection">
+            <article class="fleet-card legendary">
+              <div class="fleet-card-art captain-art"></div>
+              <div class="rarity">Legendary</div>
+              <h3>Captain Jack</h3>
+              <p>All rewards +25%. x50 multiplier lasts 2 spins longer.</p>
+              <div class="card-level">10</div>
+              <button class="card-upgrade" id="upgradeFleetBtn" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card epic">
+              <div class="fleet-card-art pearl-art"></div>
+              <div class="rarity">Epic</div>
+              <h3>Black Pearl</h3>
+              <p>+20% raid win bonus and better mystery cargo odds.</p>
+              <div class="card-level">8</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card legendary">
+              <div class="fleet-card-art chest-art"></div>
+              <div class="rarity">Legendary</div>
+              <h3>Treasure Chest</h3>
+              <p>+35% coins from spins and treasure hunts.</p>
+              <div class="card-level">10</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card rare">
+              <div class="fleet-card-art flag-art"></div>
+              <div class="rarity">Rare</div>
+              <h3>Pirate Flag</h3>
+              <p>+15% attack power when boarding mystery ships.</p>
+              <div class="card-level">6</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card rare">
+              <div class="fleet-card-art cannon-art"></div>
+              <div class="rarity">Rare</div>
+              <h3>Cannon Crew</h3>
+              <p>+10% raid damage and extra cannonball rewards.</p>
+              <div class="card-level">6</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card epic">
+              <div class="fleet-card-art storm-art"></div>
+              <div class="rarity">Epic</div>
+              <h3>Storm</h3>
+              <p>Steal 1 bonus reward from raid opponents.</p>
+              <div class="card-level">7</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card legendary">
+              <div class="fleet-card-art compass-art"></div>
+              <div class="rarity">Legendary</div>
+              <h3>Golden Compass</h3>
+              <p>Finds the best reward on the board more often.</p>
+              <div class="card-level">9</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+            <article class="fleet-card epic">
+              <div class="fleet-card-art kraken-art"></div>
+              <div class="rarity">Epic</div>
+              <h3>Kraken</h3>
+              <p>Attack all opponents and reduce Kraken losses.</p>
+              <div class="card-level">8</div>
+              <button class="card-upgrade" data-fleet-upgrade>Upgrade</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab" id="tab-maps">
+        <div class="card">
+          <div class="section-title">
+            <div>
+              <h2>Treasure Maps</h2>
+              <p class="body-copy">Collect 10 pieces to assemble a map, then pick a dig spot.</p>
+            </div>
+            <span class="pill"><span id="mapPill">0</span> maps</span>
+          </div>
+          <div class="progress"><div class="bar" id="mapProgress"></div></div>
+          <button class="btn" id="huntBtn">Treasure Hunt</button>
+          <div class="spots" id="digSpots" hidden></div>
+          <div class="result" id="huntResult">No active hunt yet.</div>
+        </div>
+      </section>
+
+      <section class="tab" id="tab-raid">
+        <div class="card">
+          <div class="section-title">
+            <div>
+              <h2>Mystery Ship Raid</h2>
+              <p class="body-copy">Spend a raid token and pick one cargo hold.</p>
+            </div>
+            <span class="pill"><span id="raidPill">0</span> tokens</span>
+          </div>
+          <div class="cargo-grid">
+            <button class="cargo" data-cargo="gold">
+              <span class="icon">💰</span>
+              <span><b>Gold Cargo</b><span>Reliable gold scaled by fleet power.</span></span>
+            </button>
+            <button class="cargo" data-cargo="weapon">
+              <span class="icon">💣</span>
+              <span><b>Weapon Cargo</b><span>Cannonballs plus bonus gold.</span></span>
+            </button>
+            <button class="cargo" data-cargo="mystery">
+              <span class="icon">🎲</span>
+              <span><b>Mystery Cargo</b><span>Chaotic loot with the biggest upside.</span></span>
+            </button>
+          </div>
+          <div class="result" id="raidResult">Find a raid token from the wheel to board a ship.</div>
+        </div>
       </section>
     </main>
+  </div>
 
-    <script>
-const symbols = {
-  gold: { label: "Gold coins" },
-  raid: { label: "Pirate flag" },
-  shield: { label: "Storm shield" },
-  cannon: { label: "Cannon" },
-  map: { label: "Treasure map" },
-  chest: { label: "Treasure chest" },
-};
+  <nav class="nav" aria-label="Game sections">
+    <button data-tab="raid"><span>🏪</span>Shop</button>
+    <button data-tab="maps"><span>🎴</span>Cards</button>
+    <button class="active" data-tab="spin"><span>☸</span>Home</button>
+    <button data-tab="fleet"><span>⛵</span>Fleet</button>
+    <button data-tab="cove"><span>⚓</span>Clan</button>
+  </nav>
 
-const symbolKeys = Object.keys(symbols);
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-const outcomes = [
-  { reels: ["gold", "gold", "gold"], type: "gold", amount: 1500, title: "Triple Treasure" },
-  { reels: ["cannon", "cannon", "cannon"], type: "attack", title: "Cannon Attack" },
-  { reels: ["raid", "raid", "raid"], type: "raid", title: "Raid a Rival Cove" },
-  { reels: ["shield", "shield", "shield"], type: "shield", amount: 1, title: "Storm Shield" },
-  { reels: ["map", "map", "map"], type: "map", amount: 1, title: "Map Piece Found" },
-  { reels: ["chest", "gold", "chest"], type: "gold", amount: 900, title: "Captain's Chest" },
-  { reels: ["gold", "cannon", "gold"], type: "gold", amount: 600, title: "Loose Doubloons" },
-  { reels: ["map", "raid", "gold"], type: "map", amount: 1, title: "Treasure Clue" },
-];
+  <script>
+    const STORAGE_KEY = "pirate-cove-save-v1";
 
-const buildings = [
-  { id: "dock", name: "Dock", icon: "D", level: 1, baseCost: 650, note: "Bigger ships bring better loot." },
-  { id: "tavern", name: "Tavern", icon: "T", level: 1, baseCost: 500, note: "Keeps the crew ready." },
-  { id: "shipyard", name: "Shipyard", icon: "Y", level: 1, baseCost: 800, note: "Builds stronger cannons." },
-  { id: "fort", name: "Fort", icon: "F", level: 1, baseCost: 900, note: "Protects the cove." },
-  { id: "vault", name: "Vault", icon: "V", level: 1, baseCost: 700, note: "Stores more treasure." },
-];
-
-const state = {
-  gold: 2500,
-  spins: 10,
-  shields: 1,
-  maps: 0,
-  spinning: false,
-  dailyClaimed: false,
-  activeView: "spin",
-};
-
-const goldBalance = document.querySelector("#goldBalance");
-const spinsLeft = document.querySelector("#spinsLeft");
-const shieldCount = document.querySelector("#shieldCount");
-const mapCount = document.querySelector("#mapCount");
-const spinButton = document.querySelector("#spinButton");
-const resultTitle = document.querySelector("#resultTitle");
-const resultText = document.querySelector("#resultText");
-const eventPanel = document.querySelector("#eventPanel");
-const eventTitle = document.querySelector("#eventTitle");
-const eventText = document.querySelector("#eventText");
-const eventActions = document.querySelector("#eventActions");
-const buildingsEl = document.querySelector("#buildings");
-const dailyButton = document.querySelector("#dailyButton");
-const spinView = document.querySelector("#spinView");
-const buildView = document.querySelector("#buildView");
-const viewToggle = document.querySelector("#viewToggle");
-const toBuildButton = document.querySelector("#toBuildButton");
-const toSpinButton = document.querySelector("#toSpinButton");
-const reels = [document.querySelector("#reelOne"), document.querySelector("#reelTwo"), document.querySelector("#reelThree")];
-
-function formatGold(value) {
-  return value.toLocaleString("en-US");
-}
-
-function upgradeCost(building) {
-  return Math.round(building.baseCost * building.level * 1.35);
-}
-
-function setView(view) {
-  state.activeView = view;
-  spinView.classList.toggle("active", view === "spin");
-  buildView.classList.toggle("active", view === "build");
-  viewToggle.textContent = view === "spin" ? "Build" : "Spin";
-}
-
-function setReels(keys) {
-  reels.forEach((reel, index) => {
-    const before = symbolKeys[(symbolKeys.indexOf(keys[index]) + 5) % symbolKeys.length];
-    const after = symbolKeys[(symbolKeys.indexOf(keys[index]) + 1) % symbolKeys.length];
-    reel.innerHTML = `
-      <div class="reel-track">
-        ${symbolMarkup(before)}
-        ${symbolMarkup(keys[index], " is-result")}
-        ${symbolMarkup(after)}
-      </div>
-    `;
-    reel.dataset.result = keys[index];
-    reel.querySelector(".reel-track").style.transform = `translateY(0)`;
-  });
-}
-
-function symbolMarkup(key, className = "") {
-  return `
-    <span class="reel-cell${className}" data-symbol="${key}" aria-label="${symbols[key].label}">
-      <span class="slot-symbol symbol-${key}"></span>
-    </span>
-  `;
-}
-
-function randomSymbol(exclude) {
-  const choices = symbolKeys.filter((key) => key !== exclude);
-  return choices[Math.floor(Math.random() * choices.length)];
-}
-
-function getReelCellHeight(reel) {
-  const cell = reel.querySelector(".reel-cell");
-  return cell ? cell.getBoundingClientRect().height : 78;
-}
-
-function buildSpinStrip(finalKey, reelIndex, cellHeight) {
-  const strip = [];
-  const visibleBeforeResult = 1;
-  const spinLength = 18 + reelIndex * 4;
-
-  for (let index = 0; index < spinLength; index += 1) {
-    strip.push(randomSymbol(strip[index - 1]));
-  }
-
-  strip.push(finalKey, randomSymbol(finalKey));
-  return {
-    keys: strip,
-    resultIndex: strip.length - 2,
-    resultOffset: (strip.length - 1 - visibleBeforeResult) * cellHeight,
-  };
-}
-
-function waitForReelStop(reel, fallbackMs) {
-  const track = reel.querySelector(".reel-track");
-
-  return new Promise((resolve) => {
-    let finished = false;
-
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      track.removeEventListener("transitionend", onTransitionEnd);
-      resolve();
-    };
-
-    const onTransitionEnd = (event) => {
-      if (event.propertyName === "transform") finish();
-    };
-
-    track.addEventListener("transitionend", onTransitionEnd);
-    window.setTimeout(finish, fallbackMs);
-  });
-}
-
-function render() {
-  goldBalance.textContent = formatGold(state.gold);
-  spinsLeft.textContent = state.spins;
-  shieldCount.textContent = state.shields;
-  mapCount.textContent = `${state.maps}/3`;
-  spinButton.disabled = state.spinning || state.spins <= 0;
-  dailyButton.disabled = state.dailyClaimed;
-  dailyButton.textContent = state.dailyClaimed ? "Chest Claimed" : "Daily Chest";
-
-  buildingsEl.innerHTML = buildings
-    .map((building) => {
-      const cost = upgradeCost(building);
-      const disabled = state.gold < cost ? "disabled" : "";
-      return `
-        <article class="building">
-          <div class="building-icon">${building.icon}</div>
-          <div>
-            <h3>${building.name} Lv. ${building.level}</h3>
-            <p>${building.note}</p>
-          </div>
-          <button class="upgrade-button" data-upgrade="${building.id}" ${disabled}>${formatGold(cost)}</button>
-        </article>
-      `;
-    })
-    .join("");
-}
-
-function showResult(title, text) {
-  resultTitle.textContent = title;
-  resultText.textContent = text;
-}
-
-function hideEvent() {
-  eventPanel.hidden = true;
-  eventActions.innerHTML = "";
-}
-
-function showChoiceEvent(kind) {
-  const isRaid = kind === "raid";
-  eventPanel.hidden = false;
-  eventTitle.textContent = isRaid ? "Raid a Rival Cove" : "Fire the Cannons";
-  eventText.textContent = isRaid
-    ? "Pick a hiding spot. One has the big stash, two have smaller spoils."
-    : "Choose a target. Forts may block some of the damage.";
-
-  const actions = isRaid
-    ? [
-        { label: "Palm Hut", gold: 500 },
-        { label: "Old Well", gold: 950 },
-        { label: "Shipwreck", gold: 1600 },
+    const titleTracks = {
+      cove: [
+        { level: 1, title: "Beach Camp" },
+        { level: 5, title: "Smuggler Cove" },
+        { level: 10, title: "Pirate Outpost" },
+        { level: 20, title: "Skull Island Port" },
+        { level: 35, title: "Pirate Kingdom" }
+      ],
+      fleet: [
+        { level: 1, title: "Rowboat" },
+        { level: 5, title: "Sloop" },
+        { level: 10, title: "Brigantine" },
+        { level: 20, title: "Frigate" },
+        { level: 35, title: "Man O' War" }
       ]
-    : [
-        { label: "Dock", gold: 650 },
-        { label: "Fort", gold: 400 },
-        { label: "Vault", gold: 900 },
+    };
+
+    const defaultState = {
+      gold: 250,
+      spins: 25,
+      coveLevel: 1,
+      fleetLevel: 1,
+      mapPieces: 0,
+      treasureMaps: 0,
+      raidTokens: 0,
+      cannonballs: 0,
+      wheelRotation: 0
+    };
+
+    let state = loadGame();
+    let isSpinning = false;
+    let activeDig = null;
+    let slotSpinTimer = null;
+
+    const slotSymbols = ["coin", "flag", "chest", "cannon", "hat", "barrel", "bottle"];
+    const rewardSymbols = {
+      gold: "coin",
+      spins: "barrel",
+      cannonballs: "cannon",
+      mapPieces: "flag",
+      raidToken: "chest",
+      kraken: "hat"
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+      const elements = {
+      accountName: $("#accountName"),
+      goldStat: $("#goldStat"),
+      spinsStat: $("#spinsStat"),
+      coveStat: $("#coveStat"),
+      fleetStat: $("#fleetStat"),
+      piecesStat: $("#piecesStat"),
+      mapsStat: $("#mapsStat"),
+      raidStat: $("#raidStat"),
+      cannonStat: $("#cannonStat"),
+      heroTitle: $("#heroTitle"),
+      heroText: $("#heroText"),
+      coveTitle: $("#coveTitle"),
+      coveLevelLabel: $("#coveLevelLabel"),
+      coveCost: $("#coveCost"),
+      coveNext: $("#coveNext"),
+      coveProgress: $("#coveProgress"),
+      upgradeCoveBtn: $("#upgradeCoveBtn"),
+      fleetTitle: $("#fleetTitle"),
+      fleetLevelLabel: $("#fleetLevelLabel"),
+      fleetCost: $("#fleetCost"),
+      fleetNext: $("#fleetNext"),
+      fleetProgress: $("#fleetProgress"),
+      upgradeFleetBtn: $("#upgradeFleetBtn"),
+      fleetUpgradeButtons: $$("[data-fleet-upgrade]"),
+      raidBoost: $("#raidBoost"),
+      shipMini: $("#shipMini"),
+      spinPill: $("#spinPill"),
+      spinBtn: $("#spinBtn"),
+      spinResult: $("#spinResult"),
+      spinMultiplier: $("#spinMultiplier"),
+      wheel: $("#wheel"),
+      slotMachine: $(".slot-machine"),
+      slotCells: $$(".slot-cell"),
+      energyFill: $("#energyFill"),
+      energyText: $("#energyText"),
+      homeCove: $("#homeCove"),
+      homeMaps: $("#homeMaps"),
+      homeRaid: $("#homeRaid"),
+      mapPill: $("#mapPill"),
+      mapProgress: $("#mapProgress"),
+      huntBtn: $("#huntBtn"),
+      digSpots: $("#digSpots"),
+      huntResult: $("#huntResult"),
+      raidPill: $("#raidPill"),
+      raidResult: $("#raidResult"),
+      menuBtn: $("#menuBtn"),
+      menuPopover: $("#menuPopover"),
+      resetBtn: $("#resetBtn"),
+      toast: $("#toast")
+    };
+
+    // Save and restore progress from localStorage.
+    function loadGame() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return saved ? { ...defaultState, ...saved } : { ...defaultState };
+      } catch {
+        return { ...defaultState };
+      }
+    }
+
+    function saveGame() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetGame() {
+      if (!confirm("Reset Pirate Cove and lose all progress?")) return;
+      state = { ...defaultState };
+      activeDig = null;
+      saveGame();
+      render();
+      elements.menuPopover.hidden = true;
+      showToast("Fresh tide, fresh start. Your cove has been reset.");
+    }
+
+    // Title, cost, and progression helpers.
+    function getTitle(type, level) {
+      return titleTracks[type].reduce((current, item) => level >= item.level ? item.title : current, titleTracks[type][0].title);
+    }
+
+    function getNextTitle(type, level) {
+      return titleTracks[type].find((item) => item.level > level);
+    }
+
+    function getUpgradeCost(type) {
+      const base = type === "cove" ? 75 : 90;
+      const level = type === "cove" ? state.coveLevel : state.fleetLevel;
+      return Math.floor(base * Math.pow(1.18, level - 1) + level * 18);
+    }
+
+    function getProgressToNext(type, level) {
+      const current = [...titleTracks[type]].reverse().find((item) => level >= item.level);
+      const next = getNextTitle(type, level);
+      if (!next) return 100;
+      return Math.max(6, Math.round(((level - current.level) / (next.level - current.level)) * 100));
+    }
+
+    function formatNumber(value) {
+      return Math.floor(value).toLocaleString();
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function setSlotSymbol(cell, symbol) {
+      cell.textContent = "";
+      cell.dataset.symbol = symbol;
+      cell.style.backgroundImage = `url("symbol-${symbol}.png")`;
+    }
+
+    // Core rendering keeps all cards, buttons, and stats in sync.
+    function render() {
+      const coveTitle = getTitle("cove", state.coveLevel);
+      const fleetTitle = getTitle("fleet", state.fleetLevel);
+      const coveCost = getUpgradeCost("cove");
+      const fleetCost = getUpgradeCost("fleet");
+      const coveNext = getNextTitle("cove", state.coveLevel);
+      const fleetNext = getNextTitle("fleet", state.fleetLevel);
+
+      elements.goldStat.textContent = formatNumber(state.gold);
+      elements.accountName.textContent = `Captain Jack Lv ${state.coveLevel}`;
+      if (elements.spinsStat) {
+        elements.spinsStat.textContent = state.spins;
+      }
+      elements.coveStat.textContent = state.coveLevel;
+      elements.fleetStat.textContent = state.fleetLevel;
+      elements.piecesStat.textContent = state.mapPieces;
+      elements.mapsStat.textContent = state.treasureMaps;
+      elements.raidStat.textContent = state.raidTokens;
+      elements.cannonStat.textContent = state.cannonballs;
+
+      elements.heroTitle.textContent = coveTitle;
+      elements.heroText.textContent = `${fleetTitle} captains bring plunder back to a level ${state.coveLevel} hideout.`;
+      elements.homeCove.textContent = `${coveTitle} L${state.coveLevel}`;
+      elements.homeMaps.textContent = `${state.treasureMaps} maps ready`;
+      elements.homeRaid.textContent = `${state.raidTokens} tokens`;
+
+      elements.coveTitle.textContent = coveTitle;
+      elements.coveLevelLabel.textContent = state.coveLevel;
+      elements.coveCost.textContent = `${formatNumber(coveCost)} gold`;
+      elements.coveNext.textContent = coveNext ? `Next title at level ${coveNext.level}: ${coveNext.title}.` : "You rule the Pirate Kingdom.";
+      elements.coveProgress.style.width = `${getProgressToNext("cove", state.coveLevel)}%`;
+      elements.upgradeCoveBtn.disabled = state.gold < coveCost;
+
+      elements.fleetTitle.textContent = fleetTitle;
+      elements.fleetLevelLabel.textContent = state.fleetLevel;
+      elements.fleetCost.textContent = `${formatNumber(fleetCost)} gold`;
+      elements.fleetNext.textContent = fleetNext ? `Next title at level ${fleetNext.level}: ${fleetNext.title}.` : "Your fleet is already legendary.";
+      elements.fleetProgress.style.width = `${getProgressToNext("fleet", state.fleetLevel)}%`;
+      elements.fleetUpgradeButtons.forEach((button) => {
+        button.disabled = state.gold < fleetCost;
+        button.textContent = state.gold < fleetCost ? "Need Gold" : "Upgrade";
+      });
+      elements.raidBoost.textContent = `${getRaidMultiplier().toFixed(2)}x`;
+      elements.shipMini.textContent = fleetTitle;
+
+      elements.spinPill.textContent = state.spins;
+      elements.spinBtn.disabled = state.spins <= 0 || isSpinning;
+      if (elements.spinMultiplier) {
+        elements.spinMultiplier.textContent = `X${Math.max(1, Math.floor(getRaidMultiplier()))}`;
+      }
+      elements.energyText.textContent = `${state.spins}/25`;
+      elements.energyFill.style.width = `${Math.min(100, (state.spins / 25) * 100)}%`;
+
+      elements.mapPill.textContent = state.treasureMaps;
+      elements.mapProgress.style.width = `${state.mapPieces * 10}%`;
+      elements.huntBtn.disabled = state.treasureMaps <= 0 || Boolean(activeDig);
+
+      elements.raidPill.textContent = state.raidTokens;
+      $$(".cargo").forEach((button) => button.disabled = state.raidTokens <= 0);
+
+      if (elements.wheel) {
+        elements.wheel.style.transform = `rotate(${state.wheelRotation}deg)`;
+      }
+    }
+
+    // Cove and fleet upgrades spend gold and increase long-term rewards.
+    function upgrade(type) {
+      const cost = getUpgradeCost(type);
+      if (state.gold < cost) {
+        showToast("Not enough gold for that upgrade yet.");
+        return;
+      }
+
+      state.gold -= cost;
+      if (type === "cove") {
+        state.coveLevel += 1;
+        showToast(`Cove upgraded to level ${state.coveLevel}: ${getTitle("cove", state.coveLevel)}.`);
+      } else {
+        state.fleetLevel += 1;
+        showToast(`Fleet upgraded to level ${state.fleetLevel}: ${getTitle("fleet", state.fleetLevel)}.`);
+      }
+      saveGame();
+      render();
+    }
+
+    // Spin wheel rewards are weighted to keep the prototype lively.
+    function spinWheel() {
+      if (isSpinning || state.spins <= 0) return;
+      isSpinning = true;
+      state.spins -= 1;
+
+      const rewards = [
+        { type: "gold", label: "Gold", weight: 35 },
+        { type: "spins", label: "Extra Spins", weight: 17 },
+        { type: "cannonballs", label: "Cannonballs", weight: 17 },
+        { type: "mapPieces", label: "Map Pieces", weight: 14 },
+        { type: "raidToken", label: "Raid Token", weight: 10 },
+        { type: "kraken", label: "Kraken Attack", weight: 7 }
       ];
 
-  eventActions.innerHTML = actions
-    .sort(() => Math.random() - 0.5)
-    .map((action) => `<button data-event-gold="${action.gold}" data-kind="${kind}">${action.label}</button>`)
-    .join("");
-}
+      const reward = weightedPick(rewards);
+      state.wheelRotation += 720 + randomInt(120, 420);
+      shuffleSlotBoard();
+      elements.spinResult.textContent = "The reels are spinning...";
+      render();
 
-function handleOutcome(outcome) {
-  hideEvent();
-
-  if (outcome.type === "gold") {
-    state.gold += outcome.amount;
-    showResult(outcome.title, `You hauled in ${formatGold(outcome.amount)} gold.`);
-  }
-
-  if (outcome.type === "shield") {
-    state.shields += outcome.amount;
-    showResult(outcome.title, "A charm of storm fog now protects your cove.");
-  }
-
-  if (outcome.type === "map") {
-    state.maps += outcome.amount;
-    if (state.maps >= 3) {
-      state.maps = 0;
-      state.gold += 1800;
-      showResult("Treasure Map Complete", "You found a buried cache worth 1,800 gold.");
-    } else {
-      showResult(outcome.title, "Collect 3 map pieces to uncover buried treasure.");
+      setTimeout(() => {
+        const message = applySpinReward(reward.type);
+        settleSlotBoard(reward.type);
+        elements.spinResult.textContent = message;
+        pulse(elements.spinResult);
+        isSpinning = false;
+        saveGame();
+        render();
+      }, 1050);
     }
-  }
 
-  if (outcome.type === "raid" || outcome.type === "attack") {
-    showResult(outcome.title, "Choose where to strike for bonus treasure.");
-    showChoiceEvent(outcome.type);
-  }
+    function weightedPick(items) {
+      const total = items.reduce((sum, item) => sum + item.weight, 0);
+      let roll = Math.random() * total;
+      for (const item of items) {
+        roll -= item.weight;
+        if (roll <= 0) return item;
+      }
+      return items[0];
+    }
 
-  render();
-}
+    function shuffleSlotBoard() {
+      elements.slotMachine.classList.add("spin-pop");
+      setTimeout(() => elements.slotMachine.classList.remove("spin-pop"), 300);
+      clearInterval(slotSpinTimer);
+      elements.slotCells.forEach((cell) => cell.classList.add("reel-spin"));
+      slotSpinTimer = setInterval(() => {
+        elements.slotCells.forEach((cell) => {
+          setSlotSymbol(cell, slotSymbols[randomInt(0, slotSymbols.length - 1)]);
+        });
+      }, 82);
+    }
 
-function spinSlots() {
-  if (state.spinning || state.spins <= 0) return;
+    function settleSlotBoard(type) {
+      clearInterval(slotSpinTimer);
+      const heroSymbol = rewardSymbols[type] || "chest";
+      elements.slotCells.forEach((cell, index) => {
+        const symbol = index % 5 === 0 || index === 6 ? heroSymbol : slotSymbols[randomInt(0, slotSymbols.length - 1)];
+        setSlotSymbol(cell, symbol);
+        cell.classList.remove("reel-spin");
+        cell.classList.add("spin-pop");
+        setTimeout(() => cell.classList.remove("spin-pop"), 260);
+      });
+    }
 
-  state.spinning = true;
-  state.spins -= 1;
-  hideEvent();
-  showResult("Spinning", "The reels are rolling...");
-  render();
+    function applySpinReward(type) {
+      if (type === "gold") {
+        const amount = randomInt(35, 95) + state.coveLevel * randomInt(3, 8);
+        state.gold += amount;
+        return `Treasure chest found: +${amount} gold.`;
+      }
 
-  const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-  const stopPromises = reels.map((reel, index) => {
-    const strip = buildSpinStrip(outcome.reels[index], index, getReelCellHeight(reel));
-    reel.classList.add("is-spinning");
-    reel.dataset.result = outcome.reels[index];
-    reel.innerHTML = `
-      <div class="reel-track">
-        ${strip.keys.map((key, cellIndex) => symbolMarkup(key, cellIndex === strip.resultIndex ? " is-result" : "")).join("")}
-      </div>
-    `;
+      if (type === "spins") {
+        const amount = randomInt(2, 5);
+        state.spins += amount;
+        return `A lucky wind fills the sails: +${amount} spins.`;
+      }
 
-    const track = reel.querySelector(".reel-track");
-    const duration = 1.25 + index * 0.25;
-    track.style.transition = "none";
-    track.style.transform = "translateY(0)";
-    track.offsetHeight;
-    track.style.transition = `transform ${duration}s cubic-bezier(0.12, 0.76, 0.18, 1)`;
-    track.style.transform = `translateY(-${strip.resultOffset}px)`;
-    return waitForReelStop(reel, duration * 1000 + 400);
-  });
+      if (type === "cannonballs") {
+        const amount = randomInt(3, 9);
+        state.cannonballs += amount;
+        return `Armory crate hauled aboard: +${amount} cannonballs.`;
+      }
 
-  Promise.all(stopPromises).then(() => {
-    reels.forEach((reel) => reel.classList.remove("is-spinning"));
-    state.spinning = false;
-    handleOutcome(outcome);
-  });
-}
+      if (type === "mapPieces") {
+        const amount = randomInt(2, 5);
+        addMapPieces(amount);
+        return `Torn parchment recovered: +${amount} map pieces.`;
+      }
 
-function upgradeBuilding(id) {
-  const building = buildings.find((item) => item.id === id);
-  if (!building) return;
+      if (type === "raidToken") {
+        state.raidTokens += 1;
+        return "Black flag sighted: +1 raid token.";
+      }
 
-  const cost = upgradeCost(building);
-  if (state.gold < cost) {
-    setView("spin");
-    showResult("Need More Gold", `Spin for treasure to upgrade the ${building.name.toLowerCase()}.`);
-    return;
-  }
+      const loss = Math.min(state.gold, randomInt(20, 70));
+      const consolation = Math.random() > 0.5;
+      state.gold -= loss;
+      if (consolation) state.cannonballs += 2;
+      return `Kraken attack! Lost ${loss} gold${consolation ? ", but salvaged 2 cannonballs" : ""}.`;
+    }
 
-  state.gold -= cost;
-  building.level += 1;
-  render();
-}
+    function addMapPieces(amount) {
+      state.mapPieces += amount;
+      while (state.mapPieces >= 10) {
+        state.mapPieces -= 10;
+        state.treasureMaps += 1;
+      }
+    }
 
-spinButton.addEventListener("click", spinSlots);
-viewToggle.addEventListener("click", () => setView(state.activeView === "spin" ? "build" : "spin"));
-toBuildButton.addEventListener("click", () => setView("build"));
-toSpinButton.addEventListener("click", () => setView("spin"));
+    // Treasure hunts create nine dig spots with one jackpot and one trap.
+    function startHunt() {
+      if (state.treasureMaps <= 0 || activeDig) return;
+      state.treasureMaps -= 1;
 
-buildingsEl.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-upgrade]");
-  if (!button) return;
-  upgradeBuilding(button.dataset.upgrade);
-});
+      const jackpot = randomInt(0, 8);
+      let trap = randomInt(0, 8);
+      while (trap === jackpot) trap = randomInt(0, 8);
 
-document.querySelector("#islandMap").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-map-upgrade]");
-  if (!button) return;
-  upgradeBuilding(button.dataset.mapUpgrade);
-});
+      activeDig = Array.from({ length: 9 }, (_, index) => {
+        if (index === jackpot) return { kind: "jackpot", value: randomInt(260, 460) + state.coveLevel * 10 };
+        if (index === trap) return { kind: "trap", value: randomInt(25, 80) };
+        return { kind: "gold", value: randomInt(35, 105) + state.coveLevel * 3 };
+      });
 
-eventActions.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-event-gold]");
-  if (!button) return;
+      elements.huntResult.textContent = "Choose one dig spot. The map burns after the dig.";
+      renderDigSpots();
+      saveGame();
+      render();
+    }
 
-  const gold = Number(button.dataset.eventGold);
-  state.gold += gold;
-  showResult(button.dataset.kind === "raid" ? "Raid Complete" : "Attack Complete", `You plundered ${formatGold(gold)} gold.`);
-  hideEvent();
-  render();
-});
+    function renderDigSpots() {
+      elements.digSpots.hidden = false;
+      elements.digSpots.innerHTML = "";
+      activeDig.forEach((spot, index) => {
+        const button = document.createElement("button");
+        button.className = "spot";
+        button.textContent = "Dig";
+        button.setAttribute("aria-label", `Dig spot ${index + 1}`);
+        button.addEventListener("click", () => digSpot(index));
+        elements.digSpots.appendChild(button);
+      });
+    }
 
-dailyButton.addEventListener("click", () => {
-  if (state.dailyClaimed) return;
-  state.dailyClaimed = true;
-  state.gold += 1000;
-  state.spins += 5;
-  showResult("Daily Chest Opened", "You gained 1,000 gold and 5 extra spins.");
-  hideEvent();
-  render();
-});
+    function digSpot(index) {
+      if (!activeDig) return;
+      const spot = activeDig[index];
+      const buttons = $$(".spot");
+      buttons.forEach((button) => button.disabled = true);
 
-setReels(["gold", "cannon", "map"]);
-render();
+      if (spot.kind === "trap") {
+        state.cannonballs = Math.max(0, state.cannonballs - 2);
+        buttons[index].classList.add("trap");
+        buttons[index].textContent = "Trap!";
+        elements.huntResult.textContent = `Trap sprung. You lost 2 cannonballs, but kept your gold.`;
+      } else {
+        state.gold += spot.value;
+        buttons[index].classList.add("revealed");
+        buttons[index].textContent = spot.kind === "jackpot" ? "Jackpot!" : `+${spot.value}`;
+        elements.huntResult.textContent = spot.kind === "jackpot"
+          ? `Buried royal hoard: +${spot.value} gold.`
+          : `Buried coins: +${spot.value} gold.`;
+      }
 
-    </script>
-  </body>
+      pulse(elements.huntResult);
+      setTimeout(() => {
+        activeDig = null;
+        elements.digSpots.hidden = true;
+        elements.digSpots.innerHTML = "";
+        render();
+      }, 1350);
+      saveGame();
+      render();
+    }
+
+    // Raid rewards scale with fleet level and consume one raid token.
+    function getRaidMultiplier() {
+      return 1 + state.fleetLevel * 0.05;
+    }
+
+    function raidCargo(type) {
+      if (state.raidTokens <= 0) {
+        showToast("You need a raid token to board a mystery ship.");
+        return;
+      }
+
+      state.raidTokens -= 1;
+      const multiplier = getRaidMultiplier();
+      let message = "";
+
+      if (type === "gold") {
+        const gold = Math.floor(randomInt(110, 220) * multiplier);
+        state.gold += gold;
+        message = `Gold cargo secured: +${gold} gold.`;
+      }
+
+      if (type === "weapon") {
+        const balls = randomInt(5, 12);
+        const gold = Math.floor(randomInt(50, 120) * multiplier);
+        state.cannonballs += balls;
+        state.gold += gold;
+        message = `Weapon cargo claimed: +${balls} cannonballs and +${gold} gold.`;
+      }
+
+      if (type === "mystery") {
+        const roll = Math.random();
+        if (roll < 0.42) {
+          const gold = Math.floor(randomInt(170, 340) * multiplier);
+          state.gold += gold;
+          message = `Mystery hold glittered: +${gold} gold.`;
+        } else if (roll < 0.76) {
+          state.spins += 4;
+          addMapPieces(4);
+          message = "Mystery hold had charts and sails: +4 spins and +4 map pieces.";
+        } else {
+          state.raidTokens += 1;
+          state.cannonballs += 8;
+          message = "Hidden armory found: +1 raid token and +8 cannonballs.";
+        }
+      }
+
+      elements.raidResult.textContent = message;
+      pulse(elements.raidResult);
+      saveGame();
+      render();
+    }
+
+    // UI events and small feedback effects.
+    function switchTab(name) {
+      $$(".tab").forEach((tab) => tab.classList.toggle("active", tab.id === `tab-${name}`));
+      $$(".nav button").forEach((button) => button.classList.toggle("active", button.dataset.tab === name));
+    }
+
+    function pulse(element) {
+      element.classList.remove("flash");
+      void element.offsetWidth;
+      element.classList.add("flash");
+    }
+
+    function showToast(message) {
+      elements.toast.textContent = message;
+      elements.toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => elements.toast.classList.remove("show"), 2100);
+    }
+
+    function toggleMenu() {
+      elements.menuPopover.hidden = !elements.menuPopover.hidden;
+    }
+
+    $$("[data-tab]").forEach((button) => button.addEventListener("click", () => switchTab(button.dataset.tab)));
+    elements.upgradeCoveBtn.addEventListener("click", () => upgrade("cove"));
+    elements.fleetUpgradeButtons.forEach((button) => button.addEventListener("click", () => upgrade("fleet")));
+    elements.spinBtn.addEventListener("click", spinWheel);
+    elements.huntBtn.addEventListener("click", startHunt);
+    elements.menuBtn.addEventListener("click", toggleMenu);
+    elements.resetBtn.addEventListener("click", resetGame);
+    $$(".cargo").forEach((button) => button.addEventListener("click", () => raidCargo(button.dataset.cargo)));
+
+    elements.slotCells.forEach((cell, index) => setSlotSymbol(cell, slotSymbols[index % slotSymbols.length]));
+    render();
+  </script>
+</body>
 </html>
